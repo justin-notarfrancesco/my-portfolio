@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import LineBadge from '../components/LineBadge.astro';
+import NowArriving from '../components/NowArriving.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import profile from '../assets/profile.svg';
 
@@ -12,26 +13,33 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
 ---
 
 <Layout>
+  <!-- NOW ARRIVING -->
+  <div class="container hero__arriving">
+    <NowArriving />
+  </div>
+
   <!-- HERO -->
   <section class="hero section">
     <div class="container hero__grid">
       <div class="hero__intro">
-        <p class="eyebrow"><LineBadge label="1" size={32} eager /> <span class="eyebrow__eta mono">NOW ARRIVING</span></p>
         <h1 class="hero__name">Justin<br />Notarfrancesco</h1>
         <p class="hero__title label">Senior Frontend Engineer</p>
         <p class="hero__tagline text-dim">
           Your favorite engineer's favorite engineer.
         </p>
-        <div class="hero__cta">
-          <a class="btn btn--primary" href="/projects">View Work &rarr;</a>
-        </div>
 
-        <ul class="hero__lines" aria-label="Selected technologies">
-          <li><LineBadge label="N" size={32} title="React" eager /> React</li>
-          <li><LineBadge label="A" size={32} title="TypeScript" eager /> TypeScript</li>
-          <li><LineBadge label="B" size={32} title="HTML & CSS" eager /> HTML/CSS</li>
-          <li><LineBadge label="6" size={32} title="Accessibility" eager /> Accessibility</li>
-        </ul>
+        <div class="hero__actions">
+          <ul class="hero__lines" aria-label="Selected technologies">
+            <li><LineBadge label="N" size={32} title="React" eager /> React</li>
+            <li><LineBadge label="A" size={32} title="TypeScript" eager /> TypeScript</li>
+            <li><LineBadge label="B" size={32} title="HTML & CSS" eager /> HTML/CSS</li>
+            <li><LineBadge label="6" size={32} title="Accessibility" eager /> Accessibility</li>
+          </ul>
+
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="/projects">View Work &rarr;</a>
+          </div>
+        </div>
       </div>
 
       <div class="hero__media">
@@ -72,10 +80,24 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
 </Layout>
 
 <style>
+  .hero__arriving {
+    /* Carry the hero's top spacing so the eyebrow sits right above the hero
+       content instead of the section padding pushing it far away. */
+    padding-top: clamp(3.5rem, 8vw, 6.5rem);
+    /* Explicit gap (not the eyebrow's collapsing margin) so the space below
+       the eyebrow exactly matches the Express Service -> Featured Work gap. */
+    padding-bottom: 1.5rem;
+  }
+  .hero__arriving .eyebrow {
+    margin-bottom: 0;
+  }
+  .hero.section {
+    padding-top: 0;
+  }
   .hero__grid {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
-    align-items: center;
+    align-items: start;
     gap: clamp(2rem, 5vw, 4rem);
   }
   .hero__name {
@@ -95,20 +117,24 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
     max-width: 46ch;
     margin-bottom: 1.75rem;
   }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+  }
   .hero__cta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-bottom: 2rem;
   }
   .hero__lines {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 0.75rem 1.5rem;
     list-style: none;
     margin: 0;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-rule);
+    padding: 0;
   }
   .hero__lines li {
     display: flex;

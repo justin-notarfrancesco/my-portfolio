@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LineBadge from '../components/LineBadge.astro';
+import SocialLink from '../components/SocialLink.astro';
+
+const EMAIL = 'justin@notar.nyc';
+
+const socials = [
+  { icon: 'email', label: 'Email', value: EMAIL, href: `mailto:${EMAIL}`, color: 'var(--mta-red)' },
+  { icon: 'github', label: 'GitHub', value: 'github.com/justin-notarfrancesco', href: 'https://github.com/justin-notarfrancesco', color: 'var(--mta-grey)' },
+  { icon: 'linkedin', label: 'LinkedIn', value: 'in/justin-notarfrancesco', href: 'https://www.linkedin.com/in/justin-notarfrancesco/', color: 'var(--mta-blue)' },
+  { icon: 'location', label: 'Based in', value: 'New York City', href: 'https://maps.google.com/?q=New+York+City', color: 'var(--mta-purple)' },
+] as const;
+---
+
+<Layout title="Contact" description="Get in touch with Justin Notarfrancesco — email, GitHub, and LinkedIn.">
+  <section class="section">
+    <div class="container">
+      <header class="page-head">
+        <p class="eyebrow"><LineBadge label="L" size={32} eager /> <span class="eyebrow__eta mono">Service Information</span></p>
+        <h1>Contact</h1>
+      </header>
+
+      <div class="contact">
+        <div class="contact__channels">
+          <h2 class="section-title label">Direct Lines</h2>
+          <div class="channels">
+            {socials.map((s) => <SocialLink icon={s.icon} label={s.label} value={s.value} href={s.href} color={s.color} />)}
+          </div>
+        </div>
+
+        <div class="contact__form-wrap">
+          <h2 class="section-title label">Send a Message</h2>
+          <form
+            class="form"
+            action={`mailto:${EMAIL}`}
+            method="post"
+            enctype="text/plain"
+            id="contact-form"
+          >
+            <div class="field">
+              <label for="name" class="label">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email" class="label">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="message" class="label">Message</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary">Send &rarr;</button>
+            <p class="form__note text-dim mono">
+              Opens your mail client — no data leaves your device. Prefer to write directly?&nbsp;
+              <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-head__lede {
+    font-size: 1.15rem;
+  }
+
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    align-items: start;
+  }
+  .section-title {
+    color: var(--color-text-dim);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-rule);
+    margin-bottom: 1.5rem;
+  }
+  .channels {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .form {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .field .label {
+    color: var(--color-text-dim);
+  }
+  input,
+  textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    padding: 0.75rem 0.9rem;
+    width: 100%;
+    resize: vertical;
+    transition: border-color 0.15s ease;
+  }
+  input:focus,
+  textarea:focus {
+    border-color: var(--color-link);
+    outline: 3px solid var(--focus);
+    outline-offset: 1px;
+  }
+  .form button {
+    justify-self: start;
+  }
+  .form__note {
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 780px) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

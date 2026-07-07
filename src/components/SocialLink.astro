@@ -1,0 +1,107 @@
+---
+type IconName = 'email' | 'github' | 'linkedin' | 'twitter' | 'external' | 'location';
+
+interface Props {
+  href: string;
+  label: string;
+  /** Secondary line, e.g. the handle or address. */
+  value?: string;
+  icon: IconName;
+  color?: string;
+}
+
+const { href, label, value, icon, color = 'var(--color-link)' } = Astro.props;
+const isExternal = href.startsWith('http');
+
+// Minimal inline icon set (stroke-based, 24x24).
+const paths: Record<IconName, string> = {
+  email: '<rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 7 9-7"/>',
+  github:
+    '<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.6 5.4 2.9 5.4 2.9a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.3c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>',
+  linkedin:
+    '<rect x="2.5" y="2.5" width="19" height="19" rx="2"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4M11 17v-7"/>',
+  twitter:
+    '<path d="M18 3h3l-7.5 8.5L22 21h-6l-4.5-6L6 21H3l8-9L2 3h6l4 5.5L18 3z"/>',
+  external: '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/>',
+  location: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
+};
+---
+
+<a
+  class="social-link"
+  href={href}
+  style={`--sl-color:${color}`}
+  {...isExternal ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
+>
+  <span class="social-link__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={paths[icon]} />
+  </span>
+  <span class="social-link__text">
+    <span class="social-link__label">{label}</span>
+    {value && <span class="social-link__value mono">{value}</span>}
+  </span>
+  <span class="social-link__arrow mono" aria-hidden="true">&rsaquo;</span>
+</a>
+
+<style>
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease,
+      transform 0.12s ease;
+  }
+  .social-link:hover {
+    text-decoration: none;
+    border-color: var(--sl-color);
+    background: var(--color-surface-2);
+    transform: translateX(4px);
+  }
+  .social-link__icon {
+    display: grid;
+    place-items: center;
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: 50%;
+    background: var(--sl-color);
+    color: #0a0a0a;
+    flex: none;
+  }
+  .social-link__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .social-link__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .social-link__label {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .social-link__value {
+    font-size: 0.85rem;
+    color: var(--color-text-dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .social-link__arrow {
+    margin-left: auto;
+    font-size: 1.5rem;
+    color: var(--color-text-dim);
+    transition: color 0.15s ease;
+  }
+  .social-link:hover .social-link__arrow {
+    color: var(--sl-color);
+  }
+</style>

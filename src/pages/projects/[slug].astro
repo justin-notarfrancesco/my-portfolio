@@ -1,0 +1,214 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import LineBadge from '../../components/LineBadge.astro';
+import { resolveColor } from '../../lib/theme';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+const accent = resolveColor(data.lineColor);
+---
+
+<Layout title={data.title} description={data.description}>
+  <article class="section" style={`--accent:${accent}`}>
+    <div class="container detail">
+      <a class="back" href="/projects">&larr; All work</a>
+
+      <header class="detail__head">
+        <div class="detail__badge">
+          <LineBadge label={data.line} size={75} title={`${data.title} line`} eager/>
+        </div>
+        <div>
+          <h1>{data.title}</h1>
+          <p class="detail__desc text-dim">{data.description}</p>
+          <div class="detail__meta">
+            {data.year && <span class="mono label">{data.year}</span>}
+            {data.liveUrl && (
+              <a class="btn btn--primary" href={data.liveUrl} target="_blank" rel="noopener noreferrer">
+                Live Site &rarr;
+              </a>
+            )}
+            {data.repoUrl && (
+              <a class="btn btn--ghost" href={data.repoUrl} target="_blank" rel="noopener noreferrer">
+                Source
+              </a>
+            )}
+          </div>
+        </div>
+      </header>
+
+      <div class="detail__hero">
+        {
+          data.image ? (
+            <img src={data.image} alt={`${data.title} screenshot`} />
+          ) : (
+            <div class="detail__placeholder">
+              <LineBadge label={data.line} size={72} eager/>
+              <span class="label text-dim">Screenshot — swap in a real image</span>
+            </div>
+          )
+        }
+      </div>
+
+      <div class="detail__layout">
+        <div class="prose">
+          <Content />
+        </div>
+        <aside class="detail__aside">
+          <h2 class="label">Tech Stack</h2>
+          <ul class="stack-list">
+            {data.techStack.map((t) => <li>{t}</li>)}
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .detail {
+    max-width: 900px;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-dim);
+  }
+  .back:hover {
+    color: var(--color-link);
+  }
+
+  .detail__head {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+  .detail__desc {
+    font-size: 1.2rem;
+    max-width: 55ch;
+    margin-bottom: 1.25rem;
+  }
+  .detail__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .detail__meta .label {
+    color: var(--color-text-dim);
+  }
+
+  .detail__hero {
+    border: 1px solid var(--color-rule);
+    border-top: 4px solid var(--accent);
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 16 / 8;
+    margin-bottom: 3rem;
+    background: var(--color-surface);
+  }
+  .detail__hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .detail__placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-image:
+      linear-gradient(var(--color-rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-rule) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: center;
+  }
+
+  .detail__layout {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 3rem;
+    align-items: start;
+  }
+  .detail__aside {
+    position: sticky;
+    top: calc(var(--nav-h) + 1.5rem);
+    padding: 1.25rem;
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+  .detail__aside h2 {
+    margin: 0 0 1rem;
+    color: var(--color-text-dim);
+  }
+  .stack-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .stack-list li {
+    padding: 0.4rem 0.75rem;
+    border-left: 3px solid var(--accent);
+    background: var(--color-surface-2);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 760px) {
+    .detail__layout {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .detail__aside {
+      position: static;
+    }
+    .detail__head {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>
+
+<style is:global>
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+  }
+  .prose h3 {
+    margin-top: 1.5rem;
+  }
+  .prose p {
+    color: #d6d6d6;
+    margin-bottom: 1rem;
+  }
+  .prose ul {
+    padding-left: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  .prose li {
+    margin-bottom: 0.4rem;
+    color: #d6d6d6;
+  }
+  .prose li::marker {
+    color: var(--color-accent);
+  }
+  .prose a {
+    color: var(--color-link);
+  }
+</style>

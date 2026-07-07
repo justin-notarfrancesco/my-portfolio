@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import LineBadge from '../../components/LineBadge.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout
+  title="Work"
+  description="Selected projects by Justin Notarfrancesco — personal sites, design systems, and interactive web experiences."
+>
+  <section class="section">
+    <div class="container">
+      <header class="page-head">
+        <p class="eyebrow"><LineBadge label="G" size={32} title="7 express" express eager /> <span class="eyebrow__eta mono">Mind the gap</span></p>
+        <h1>Work</h1>
+        <p class="page-head__lede text-dim">
+          A running line of things I&rsquo;ve designed and built. Each stop links to a full write-up
+          with the tech, the live site, and the source.
+        </p>
+      </header>
+
+      <div class="grid cards">
+        {
+          projects.map((p, i) => (
+            <ProjectCard
+              slug={p.id}
+              title={p.data.title}
+              description={p.data.description}
+              techStack={p.data.techStack}
+              image={p.data.image}
+              line={p.data.line}
+              lineColor={p.data.lineColor}
+              year={p.data.year}
+              eager={i < 3}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-head__lede {
+    font-size: 1.15rem;
+  }
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 900px) {
+    .cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 560px) {
+    .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

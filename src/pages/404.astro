@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LineBadge from '../components/LineBadge.astro';
+---
+
+<Layout title="404 — Off the Map" description="This stop doesn't exist on the line.">
+  <section class="section notfound">
+    <div class="container">
+      <div class="notfound__badges" aria-hidden="true">
+        <LineBadge label="4" size={64} />
+        <LineBadge label="0" size={64} class="notfound__zero" />
+        <LineBadge label="4" size={64} />
+      </div>
+      <h1>Off the Map</h1>
+      <p class="text-dim">
+        This stop isn&rsquo;t on the line. The page may have moved, or the link ran express past it.
+      </p>
+      <div class="notfound__cta">
+        <a class="btn btn--primary" href="/">Back to Home &rarr;</a>
+        <a class="btn btn--ghost" href="/projects">View Work</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .notfound {
+    text-align: center;
+  }
+  .notfound__badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  /* The "0" isn't a real route, so it renders LineBadge's circle fallback. */
+  .notfound__zero {
+    --badge-bg: var(--mta-yellow);
+    --badge-ink: #000;
+  }
+  .notfound p {
+    max-width: 44ch;
+    margin-inline: auto;
+    font-size: 1.15rem;
+  }
+  .notfound__cta {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+</style>

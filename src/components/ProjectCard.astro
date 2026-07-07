@@ -1,0 +1,159 @@
+---
+import LineBadge from './LineBadge.astro';
+import { resolveColor } from '../lib/theme';
+
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  techStack: string[];
+  image?: string;
+  line?: string;
+  lineColor?: string;
+  year?: number;
+  /** Eagerly load the roundels — set for above-the-fold cards. */
+  eager?: boolean;
+}
+
+const { slug, title, description, techStack, image, line = '•', lineColor = 'blue', year, eager = false } = Astro.props;
+const accent = resolveColor(lineColor);
+const href = `/projects/${slug}`;
+---
+
+<article class="card" style={`--accent:${accent}`}>
+  <a class="card__media" href={href} aria-hidden="true" tabindex="-1">
+    {
+      image ? (
+        <img src={image} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <span class="card__placeholder">
+          <LineBadge label={line} size={56} eager={eager} />
+          <span class="label text-dim">Screenshot</span>
+        </span>
+      )
+    }
+  </a>
+
+  <div class="card__body">
+    <div class="card__head">
+      <LineBadge label={line} size={32} title={`${title} line`} eager={eager} />
+      <h3 class="card__title">
+        <a href={href}>{title}</a>
+      </h3>
+      {year && <span class="card__year mono text-dim">{year}</span>}
+    </div>
+
+    <p class="card__desc text-dim">{description}</p>
+
+    <ul class="card__tags" aria-label="Tech stack">
+      {techStack.slice(0, 4).map((t) => <li class="tag">{t}</li>)}
+      {techStack.length > 4 && <li class="tag tag--more">+{techStack.length - 4}</li>}
+    </ul>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+
+  .card__media {
+    display: block;
+    aspect-ratio: 16 / 10;
+    background: var(--color-surface-2);
+    border-bottom: 3px solid var(--accent);
+    overflow: hidden;
+  }
+  .card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    height: 100%;
+    background-image:
+      linear-gradient(var(--color-rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-rule) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-position: center;
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1.25rem;
+    flex: 1;
+  }
+  .card__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .card__title {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  .card__title a {
+    color: var(--color-text);
+  }
+  .card__title a:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .card__year {
+    margin-left: auto;
+    font-size: 0.85rem;
+  }
+  .card__desc {
+    margin: 0;
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0.15rem 0 0;
+    padding: 0;
+    margin-top: auto;
+  }
+  .tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 100px;
+    color: var(--color-text-dim);
+    white-space: nowrap;
+  }
+  .tag--more {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+</style>

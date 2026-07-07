@@ -1,0 +1,93 @@
+---
+interface Props {
+  /** Text inside the roundel — a line letter/number, section index, or a dot. */
+  label: string | number;
+  /** Diameter in px. */
+  size?: number;
+  /** Accessible label; falls back to the visible text. */
+  title?: string;
+  /** Eagerly load the roundel — set for above-the-fold badges. */
+  eager?: boolean;
+  /** Render the express diamond bullet instead of the local circle (routes with a diamond variant). */
+  express?: boolean;
+  class?: string;
+}
+
+/** Routes that ship an express diamond bullet under public/subway/<LINE>-exp.svg. */
+const EXPRESS_LINES = new Set(['7']);
+
+/** Official NYC subway route bullets, stored under public/subway/<LINE>.svg. */
+const SUBWAY_LINES = new Set([
+  '1', '2', '3', '4', '5', '6', '7',
+  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'J', 'L', 'M', 'N', 'Q', 'R', 'S', 'W', 'Z',
+]);
+
+const { label, size = 40, title, eager = false, express = false, class: cls } = Astro.props;
+
+const key = String(label).trim().toUpperCase();
+const isRoute = SUBWAY_LINES.has(key);
+const isExpress = express && EXPRESS_LINES.has(key);
+const src = `/subway/${key}${isExpress ? '-exp' : ''}.svg`;
+const alt = title ?? (isRoute ? `${key}${isExpress ? ' express' : ''} train` : `Line ${label}`);
+
+const fontSize = Math.round(size * 0.46);
+/** MTA bullet SVGs draw the disc at r=28.563 inside a 74.9px box (≈0.763 of the
+ * frame). Match that ratio so the CSS-circle fallback lines up with real bullets. */
+const disc = Math.round(size * 0.763);
+---
+
+{
+  isRoute ? (
+    <img
+      class:list={['line-badge', 'line-badge--svg', cls]}
+      src={src}
+      width={size}
+      height={size}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+      decoding="async"
+      style={`--badge-size:${size}px;`}
+    />
+  ) : (
+    <span
+      class:list={['line-badge', cls]}
+      style={`--badge-size:${size}px;--badge-disc:${disc}px;--badge-font:${fontSize}px;`}
+      role="img"
+      aria-label={alt}
+    >
+      <span class="line-badge__disc" aria-hidden="true">{label}</span>
+    </span>
+  )
+}
+
+<style>
+  .line-badge {
+    inline-size: var(--badge-size);
+    block-size: var(--badge-size);
+    flex: none;
+    user-select: none;
+  }
+  .line-badge--svg {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  span.line-badge {
+    display: inline-grid;
+    place-items: center;
+  }
+  .line-badge__disc {
+    inline-size: var(--badge-disc);
+    block-size: var(--badge-disc);
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--badge-bg, var(--mta-blue));
+    color: var(--badge-ink, #fff);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: var(--badge-font);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+</style>

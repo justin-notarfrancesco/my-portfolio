@@ -1,0 +1,115 @@
+---
+import LineBadge from './LineBadge.astro';
+
+const year = new Date().getFullYear();
+
+const nav = [
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Work' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const socials = [
+  { href: 'https://github.com/justin-notarfrancesco', label: 'GitHub' },
+  { href: 'https://www.linkedin.com/in/justin-notarfrancesco/', label: 'LinkedIn' },
+  { href: 'mailto:justin@notar.nyc', label: 'Email' },
+];
+---
+
+<footer class="footer">
+  <div class="footer__inner container">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo" aria-label="Justin Notarfrancesco — home">
+        <LineBadge label="J" size={48} title="Home" eager={false}/>
+        <span>
+          <strong>Justin Notarfrancesco</strong><br />
+          <span class="text-dim">Senior Frontend Engineer</span>
+        </span>
+      </a>
+    </div>
+
+    <nav class="footer__nav" aria-label="Footer">
+      <span class="label text-dim">Directory</span>
+      <ul>
+        {nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav class="footer__nav" aria-label="Social">
+      <span class="label text-dim">Connect</span>
+      <ul>
+        {
+          socials.map((s) => (
+            <li>
+              <a href={s.href} {...s.href.startsWith('http') ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}>
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div class="footer__base container">
+    <span class="mono text-dim">&copy; {year} Justin Notarfrancesco</span>
+    <span class="mono text-dim">Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer"><i>Astro</i></a> &middot; Made in NYC ❤️</span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-rule);
+    margin-top: 4rem;
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2rem;
+    padding-block: 3rem 2rem;
+  }
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-text);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  .footer__logo:hover {
+    text-decoration: none;
+  }
+
+  .footer__nav ul {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .footer__nav a {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+  .footer__nav a:hover {
+    color: var(--color-link);
+  }
+
+  .footer__base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--color-rule);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 720px) {
+    .footer__inner {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+  }
+</style>

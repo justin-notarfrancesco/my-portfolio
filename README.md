@@ -31,11 +31,13 @@ Everything below is a deliberate engineering choice, not a framework default.
 
 ## ⚙️ Engineering highlights
 
-- **📦 0 KB of JavaScript shipped.** The production build emits **no client-side JS bundle at all** —
-  the entire site is static HTML plus a single ~10 KB stylesheet. The mobile navigation, the
-  animated "in service" pulse, and the hamburger-to-X transition are all done in **pure CSS**
-  (a hidden checkbox + `:checked` sibling selectors), so nothing ships to the browser to make them
-  work.
+- **📦 JavaScript only where it earns its place.** Anything that *can* be pure CSS *is*: the mobile
+  navigation, the animated "in service" pulse, and the hamburger-to-X transition all run on a hidden
+  checkbox + `:checked` sibling selectors — zero JS. The build ships **no external JS bundle at all**;
+  the only client-side scripts are two inlined islands — the privacy-friendly analytics beacon
+  (~2.8 KB, every page) and a ~0.5 KB handler on the contact page that builds a pre-filled `mailto:`
+  link on submit. Every page is otherwise static HTML plus a single ~9.7 KB stylesheet (~2.7 KB
+  gzipped).
 - **🧩 A real design system, not scattered styles.** One file (`src/styles/global.css`) is the single
   source of truth: MTA line palette, semantic role mapping, fluid type scale, spacing, and layout
   tokens as CSS custom properties. The palette is *also* exposed as a typed module

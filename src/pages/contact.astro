@@ -31,13 +31,7 @@ const socials = [
 
         <div class="contact__form-wrap">
           <h2 class="section-title label">Send a Message</h2>
-          <form
-            class="form"
-            action={`mailto:${EMAIL}`}
-            method="post"
-            enctype="text/plain"
-            id="contact-form"
-          >
+          <form class="form" id="contact-form" data-email={EMAIL}>
             <div class="field">
               <label for="name" class="label">Name</label>
               <input id="name" name="name" type="text" autocomplete="name" required />
@@ -61,6 +55,29 @@ const socials = [
     </div>
   </section>
 </Layout>
+
+<script>
+  import { buildMailtoHref } from '../lib/contact';
+
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    // Native validation still applies (required fields, email format).
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    const to = form.dataset.email ?? '';
+    const href = buildMailtoHref(to, {
+      name: String(data.get('name') ?? ''),
+      email: String(data.get('email') ?? ''),
+      message: String(data.get('message') ?? ''),
+    });
+
+    window.location.href = href;
+  });
+</script>
 
 <style>
   .page-head__lede {

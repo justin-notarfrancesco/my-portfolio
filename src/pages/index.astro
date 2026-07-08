@@ -5,6 +5,7 @@ import Layout from '../layouts/Layout.astro';
 import LineBadge from '../components/LineBadge.astro';
 import NowArriving from '../components/NowArriving.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import SubwayTrain from '../components/SubwayTrain.astro';
 import profile from '../assets/profile.svg';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -43,7 +44,10 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
       </div>
 
       <div class="hero__media">
-        <Image src={profile} alt="Portrait of Justin Notarfrancesco" width={480} height={560} loading="eager" />
+        <div class="hero__frame">
+          <Image src={profile} alt="Portrait of Justin Notarfrancesco" width={480} height={560} loading="eager" />
+        </div>
+        <SubwayTrain />
       </div>
     </div>
   </section>
@@ -93,6 +97,9 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
   }
   .hero.section {
     padding-block: 0;
+    /* Contain the train's outer overhang horizontally without clipping it
+       vertically (it shows above/below the frame). */
+    overflow-x: clip;
   }
   .hero__grid {
     display: grid;
@@ -146,12 +153,15 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
 
   .hero__media {
     position: relative;
+    /* No clipping here — the subway train rides just outside the frame. */
+  }
+  .hero__frame {
     border: 1px solid var(--color-rule);
     border-radius: var(--radius);
     overflow: hidden;
     background: var(--color-surface);
   }
-  .hero__media img {
+  .hero__frame img {
     width: 100%;
     height: auto;
     display: block;

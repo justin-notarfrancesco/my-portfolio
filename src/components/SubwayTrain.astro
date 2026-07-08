@@ -1,0 +1,200 @@
+---
+/**
+ * A miniature 16-bit subway train — a short consist of coupled cars — that
+ * rides the OUTSIDE edge of its containing box. It cruises at a steady clip,
+ * then brakes, dwells, and pulls away at four stations marked by platform
+ * ticks on the frame. Interior lights flick on while it dwells, and the lead
+ * cab throws a headlight glow down the line.
+ *
+ * Each car is its own element on the shared offset path, trailing the one
+ * ahead by a fixed distance, so the consist articulates around corners like
+ * a caterpillar instead of pivoting as one rigid piece.
+ *
+ * Drop it inside a `position: relative` box that does NOT clip its overflow
+ * (e.g. .hero__media). It fills the box and rides just outside the border.
+ * Browsers without `offset-path: border-box` support render nothing at all.
+ */
+
+// Cars run rear → lead. Centers sit 34px apart along the path (30px car +
+// 4px coupler gap), symmetric around the animated position so the platform
+// ticks line up with the middle of the consist at each stop.
+const cars = [
+  { offset: '-51px', role: 'rear' },
+  { offset: '-17px', role: 'mid' },
+  { offset: '17px', role: 'mid' },
+  { offset: '51px', role: 'lead' },
+];
+---
+
+<div class="subway" aria-hidden="true">
+  <!-- platform ticks marking the four stations (same path as the train) -->
+  <i class="subway__stop" style="offset-distance: 12.5%"></i>
+  <i class="subway__stop" style="offset-distance: 37.5%"></i>
+  <i class="subway__stop" style="offset-distance: 62.5%"></i>
+  <i class="subway__stop" style="offset-distance: 87.5%"></i>
+
+  {
+    cars.map(({ offset, role }) => (
+      <div
+        class:list={['subway__car', { 'subway__car--lead': role === 'lead' }]}
+        style={`--car-offset: ${offset}`}
+      >
+        <svg viewBox="0 0 15 9" width="30" height="18" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <!-- roof + body with a touch of top/bottom shading -->
+          <rect x="1" y="0" width="13" height="1" fill="#d7dbde" />
+          <rect x="0" y="1" width="15" height="6" fill="#b9bdc0" />
+          <rect x="0" y="1" width="15" height="1" fill="#ccd0d3" />
+          <!-- windows (interior lights flick on during station dwells) -->
+          <rect class="subway__win" x="2" y="2" width="3" height="2" fill="#16262f" />
+          <rect class="subway__win" x="6" y="2" width="3" height="2" fill="#16262f" />
+          <rect class="subway__win" x="10" y="2" width="3" height="2" fill="#16262f" />
+          <!-- MTA livery: blue over yellow pinstripe -->
+          <rect x="0" y="5" width="15" height="1" fill="#0039a6" />
+          <rect x="0" y="6" width="15" height="1" fill="#fccc0a" />
+          <!-- undercarriage + trucks -->
+          <rect x="0" y="7" width="15" height="1" fill="#0a0a0a" />
+          <rect x="2" y="7" width="3" height="2" fill="#0a0a0a" />
+          <rect x="10" y="7" width="3" height="2" fill="#0a0a0a" />
+          <rect x="3" y="7" width="1" height="1" fill="#6f7376" />
+          <rect x="11" y="7" width="1" height="1" fill="#6f7376" />
+          <!-- coupler reaching forward to the car ahead (svg overflow is visible) -->
+          {role !== 'lead' && <rect x="15" y="4" width="2" height="1" fill="#3a3d40" />}
+          <!-- rear marker on the trailing car -->
+          {role === 'rear' && <rect x="0" y="4" width="1" height="1" fill="#ee352e" />}
+          <!-- lead cab lights, facing the direction of travel -->
+          {role === 'lead' && (
+            <Fragment>
+              <rect x="13" y="1" width="1" height="1" fill="#ff6319" />
+              <rect x="13" y="4" width="1" height="1" fill="#fde68a" />
+            </Fragment>
+          )}
+        </svg>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .subway {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    /* Rounds the offset path (coord-box paths follow border-radius), so the
+       train sweeps around corners instead of pivoting 90° on the spot. */
+    border-radius: 12px;
+    /* Without offset-path support the cars would sit static and unrotated
+       on the frame's corner — show nothing instead. */
+    display: none;
+  }
+
+  @supports (offset-path: border-box) {
+    .subway {
+      display: block;
+    }
+  }
+
+  /* Pixel platform ticks tucked just inside the frame at each stop, so the
+     mid-edge halts read as stations rather than jank. */
+  .subway__stop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 2px;
+    background: var(--mta-yellow, #fccc0a);
+    opacity: 0.9;
+    offset-path: border-box;
+    offset-rotate: auto;
+    transform: translateY(3px);
+  }
+
+  .subway__car {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Trace the border box of the overlay (== the picture's edge). Each car
+       rides the path at the shared animated distance plus its own stagger,
+       so the consist bends car-by-car around corners. The path is a closed
+       loop, so distances past either end wrap around. */
+    offset-path: border-box;
+    offset-rotate: auto;
+    offset-distance: calc(12.5% + var(--car-offset)); /* reduced-motion park */
+    /* Push the car just outside the border (negative = outward). The
+       18px-tall car is centered on the path; -10px puts its wheels ~1px
+       outside the frame. */
+    transform: translateY(-10px);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+    animation: subway-ride 20s infinite;
+  }
+
+  .subway__car svg {
+    display: block;
+    /* The coupler pixel sits past the viewBox, reaching toward the car ahead. */
+    overflow: visible;
+  }
+
+  /* Headlight glow thrown ahead of the lead cab. */
+  .subway__car--lead::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    width: 28px;
+    height: 14px;
+    transform: translateY(-50%);
+    background: radial-gradient(farthest-side at 0% 50%, rgba(253, 230, 138, 0.45), transparent);
+  }
+
+  .subway__win {
+    animation: subway-doors 20s infinite;
+  }
+
+  /* Steady cruise (linear) between stations; ease-out to brake into each
+     stop, a beat of dwell, then ease-in to accelerate away. All cars share
+     these keyframes, each shifted along the path by its --car-offset. */
+  @keyframes subway-ride {
+    0%   { offset-distance: calc(0% + var(--car-offset));    animation-timing-function: linear; }
+    5%   { offset-distance: calc(8% + var(--car-offset));    animation-timing-function: ease-out; }  /* brake */
+    11%  { offset-distance: calc(12.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 1 */
+    16%  { offset-distance: calc(12.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    22%  { offset-distance: calc(20% + var(--car-offset));   animation-timing-function: linear; }
+    30%  { offset-distance: calc(33% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
+    36%  { offset-distance: calc(37.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 2 */
+    41%  { offset-distance: calc(37.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    47%  { offset-distance: calc(45% + var(--car-offset));   animation-timing-function: linear; }
+    55%  { offset-distance: calc(58% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
+    61%  { offset-distance: calc(62.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 3 */
+    66%  { offset-distance: calc(62.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    72%  { offset-distance: calc(70% + var(--car-offset));   animation-timing-function: linear; }
+    80%  { offset-distance: calc(83% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
+    86%  { offset-distance: calc(87.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 4 */
+    91%  { offset-distance: calc(87.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    97%  { offset-distance: calc(95% + var(--car-offset));   animation-timing-function: linear; }
+    100% { offset-distance: calc(100% + var(--car-offset)); }
+  }
+
+  /* Door lights: dark in motion, flick on once for each dwell, then back
+     off on departure. The lit windows line up with the STOP holds in
+     subway-ride above. */
+  @keyframes subway-doors {
+    0%, 10.9%     { fill: #16262f; }
+    11%, 15.4%    { fill: #f7dd8a; }  /* STOP 1 */
+    15.9%, 35.9%  { fill: #16262f; }
+    36%, 40.4%    { fill: #f7dd8a; }  /* STOP 2 */
+    40.9%, 60.9%  { fill: #16262f; }
+    61%, 65.4%    { fill: #f7dd8a; }  /* STOP 3 */
+    65.9%, 85.9%  { fill: #16262f; }
+    86%, 90.4%    { fill: #f7dd8a; }  /* STOP 4 */
+    90.9%, 100%   { fill: #16262f; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .subway__car {
+      animation: none; /* parks at the first station via the base offset-distance */
+    }
+    .subway__win {
+      animation: none;
+    }
+  }
+</style>

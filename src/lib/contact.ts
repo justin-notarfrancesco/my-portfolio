@@ -20,7 +20,7 @@ export function buildMailtoHref(to: string, values: ContactFormValues): string {
   const email = values.email.trim();
   const message = values.message.trim();
 
-  const subject = `Portfolio inquiry from ${name}`;
+  const subject = `New message from ${name} via portfolio site`;
   const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
 
   const query = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;

@@ -17,7 +17,7 @@ describe('buildMailtoHref', () => {
     expect(url.pathname).toBe(TO);
 
     const params = url.searchParams;
-    expect(params.get('subject')).toBe('Portfolio inquiry from Ada Lovelace');
+    expect(params.get('subject')).toBe('New message from Ada Lovelace via portfolio site');
     expect(params.get('body')).toBe(
       'Name: Ada Lovelace\nEmail: ada@example.com\n\nHello there',
     );
@@ -56,7 +56,7 @@ describe('buildMailtoHref', () => {
     expect(href).not.toMatch(/[&#].*message/i);
 
     const url = new URL(href);
-    expect(url.searchParams.get('subject')).toBe('Portfolio inquiry from A & B');
+    expect(url.searchParams.get('subject')).toBe('New message from A & B via portfolio site');
     expect(url.searchParams.get('body')).toBe(
       'Name: A & B\nEmail: ab@example.com\n\nRate is 50% off? Yes! #deal =win',
     );
@@ -70,7 +70,7 @@ describe('buildMailtoHref', () => {
     });
 
     const url = new URL(href);
-    expect(url.searchParams.get('subject')).toBe('Portfolio inquiry from Ada');
+    expect(url.searchParams.get('subject')).toBe('New message from Ada via portfolio site');
     expect(url.searchParams.get('body')).toBe(
       'Name: Ada\nEmail: ada@example.com\n\nhi',
     );

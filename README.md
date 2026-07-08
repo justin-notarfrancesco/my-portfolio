@@ -128,4 +128,4 @@ Requires Node ≥ 22.12.
 
 ---
 
-*Design reference: [NYC Transit Authority Graphics Standards Manual](https://standardsmanual.com/products/mta) (Unimark / Vignelli, 1970).*
+*Design reference: [NYC Transit Authority Graphics Standards Manual](https://standardsmanual.com/products/nyctacompactedition) (Unimark / Vignelli, 1970).*

@@ -38,9 +38,9 @@ const cars = [
        frame that puts the top edge's midpoint at ~11.75%, with the other
        side midpoints exactly 25% apart from it. -->
   <i class="subway__stop" style="offset-distance: 11.75%"></i>
-  <i class="subway__stop" style="offset-distance: 36.75%"></i>
+  <i class="subway__stop subway__stop--vertical" style="offset-distance: 36.75%"></i>
   <i class="subway__stop" style="offset-distance: 61.75%"></i>
-  <i class="subway__stop" style="offset-distance: 86.75%"></i>
+  <i class="subway__stop subway__stop--vertical" style="offset-distance: 86.75%"></i>
 
   {
     cars.map(({ offset, role }) => (
@@ -122,6 +122,12 @@ const cars = [
     border: 2px solid #0a0a0a;
     offset-path: border-box;
     offset-rotate: 0deg;
+  }
+
+  /* Left/right edge markers: rotate so the long axis runs along the
+     (vertical) edge instead of across it. */
+  .subway__stop--vertical {
+    transform: rotate(90deg);
   }
 
   .subway__car {

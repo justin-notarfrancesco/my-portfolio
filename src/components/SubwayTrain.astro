@@ -31,11 +31,18 @@ const cars = [
   <!-- map-style station dots marking the four stations (same path as the
        train). The glow keyframes are authored for stop 1; the stops are an
        even 25% (5s) apart, so each later stop replays them shifted via a
-       negative animation-delay. -->
-  <i class="subway__stop" style="offset-distance: 12.5%; --stop-delay: 0s"></i>
-  <i class="subway__stop" style="offset-distance: 37.5%; --stop-delay: -15s"></i>
-  <i class="subway__stop" style="offset-distance: 62.5%; --stop-delay: -10s"></i>
-  <i class="subway__stop" style="offset-distance: 87.5%; --stop-delay: -5s"></i>
+       negative animation-delay.
+
+       Why 11.75% and not 12.5%: offset-distance percentages measure arc
+       length around the rounded border-box path, whose 0% point is where the
+       top edge begins — just past the top-left corner arc, not at the
+       corner — and whose arcs are shorter than sharp corners. On this square
+       frame that puts the top edge's midpoint at ~11.75%, with the other
+       side midpoints exactly 25% apart from it. -->
+  <i class="subway__stop" style="offset-distance: 11.75%; --stop-delay: 0s"></i>
+  <i class="subway__stop" style="offset-distance: 36.75%; --stop-delay: -15s"></i>
+  <i class="subway__stop" style="offset-distance: 61.75%; --stop-delay: -10s"></i>
+  <i class="subway__stop" style="offset-distance: 86.75%; --stop-delay: -5s"></i>
 
   {
     cars.map(({ offset, role }) => (
@@ -132,7 +139,7 @@ const cars = [
        loop, so distances past either end wrap around. */
     offset-path: border-box;
     offset-rotate: auto;
-    offset-distance: calc(12.5% + var(--car-offset)); /* reduced-motion park */
+    offset-distance: calc(11.75% + var(--car-offset)); /* reduced-motion park */
     /* Push the car just outside the border (negative = outward). The
        18px-tall car is centered on the path; -10px puts its wheels ~1px
        outside the frame. */
@@ -169,20 +176,20 @@ const cars = [
   @keyframes subway-ride {
     0%   { offset-distance: calc(0% + var(--car-offset));    animation-timing-function: linear; }
     5%   { offset-distance: calc(8% + var(--car-offset));    animation-timing-function: ease-out; }  /* brake */
-    11%  { offset-distance: calc(12.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 1 */
-    16%  { offset-distance: calc(12.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    11%  { offset-distance: calc(11.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 1 */
+    16%  { offset-distance: calc(11.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     22%  { offset-distance: calc(20% + var(--car-offset));   animation-timing-function: linear; }
     30%  { offset-distance: calc(33% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
-    36%  { offset-distance: calc(37.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 2 */
-    41%  { offset-distance: calc(37.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    36%  { offset-distance: calc(36.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 2 */
+    41%  { offset-distance: calc(36.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     47%  { offset-distance: calc(45% + var(--car-offset));   animation-timing-function: linear; }
     55%  { offset-distance: calc(58% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
-    61%  { offset-distance: calc(62.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 3 */
-    66%  { offset-distance: calc(62.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    61%  { offset-distance: calc(61.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 3 */
+    66%  { offset-distance: calc(61.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     72%  { offset-distance: calc(70% + var(--car-offset));   animation-timing-function: linear; }
     80%  { offset-distance: calc(83% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
-    86%  { offset-distance: calc(87.5% + var(--car-offset)); animation-timing-function: linear; }    /* STOP 4 */
-    91%  { offset-distance: calc(87.5% + var(--car-offset)); animation-timing-function: ease-in; }   /* depart */
+    86%  { offset-distance: calc(86.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 4 */
+    91%  { offset-distance: calc(86.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     97%  { offset-distance: calc(95% + var(--car-offset));   animation-timing-function: linear; }
     100% { offset-distance: calc(100% + var(--car-offset)); }
   }

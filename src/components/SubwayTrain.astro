@@ -3,9 +3,9 @@
  * A miniature 16-bit subway train — a short consist of coupled cars — that
  * rides the OUTSIDE edge of its containing box. It cruises at a steady clip,
  * then brakes, dwells, and pulls away at four stations marked by subway-map
- * style station dots sitting on the frame as if it were a route line. Interior
- * lights flick on while it dwells — and the station dot lights up in step —
- * and the lead cab throws a headlight glow down the line.
+ * style station markers sitting on the frame as if it were a route line.
+ * Interior lights flick on while it dwells, and the lead cab throws a
+ * headlight glow down the line.
  *
  * Each car is its own element on the shared offset path, trailing the one
  * ahead by a fixed distance, so the consist articulates around corners like
@@ -28,10 +28,8 @@ const cars = [
 ---
 
 <div class="subway" aria-hidden="true">
-  <!-- map-style station dots marking the four stations (same path as the
-       train). The glow keyframes are authored for stop 1; the stops are an
-       even 25% (5s) apart, so each later stop replays them shifted via a
-       negative animation-delay.
+  <!-- map-style station stops marking the four stations (same path as the
+       train).
 
        Why 11.75% and not 12.5%: offset-distance percentages measure arc
        length around the rounded border-box path, whose 0% point is where the
@@ -39,10 +37,10 @@ const cars = [
        corner — and whose arcs are shorter than sharp corners. On this square
        frame that puts the top edge's midpoint at ~11.75%, with the other
        side midpoints exactly 25% apart from it. -->
-  <i class="subway__stop" style="offset-distance: 11.75%; --stop-delay: 0s"></i>
-  <i class="subway__stop" style="offset-distance: 36.75%; --stop-delay: -15s"></i>
-  <i class="subway__stop" style="offset-distance: 61.75%; --stop-delay: -10s"></i>
-  <i class="subway__stop" style="offset-distance: 86.75%; --stop-delay: -5s"></i>
+  <i class="subway__stop" style="offset-distance: 11.75%"></i>
+  <i class="subway__stop" style="offset-distance: 36.75%"></i>
+  <i class="subway__stop" style="offset-distance: 61.75%"></i>
+  <i class="subway__stop" style="offset-distance: 86.75%"></i>
 
   {
     cars.map(({ offset, role }) => (
@@ -105,28 +103,25 @@ const cars = [
     }
   }
 
-  /* Subway-map station dots — white disc, dark ring — centered on the frame
-     border like stations on a route line, so the mid-edge halts read as
-     stations rather than jank. Each dot flicks to the nav bar's in-service
-     green with a glow while the train dwells at it (in step with the
-     interior lights). */
+  /* Subway-map station markers — white rectangle, dark ring — centered on
+     the frame border like stations on a route line, so the mid-edge halts
+     read as stations rather than jank. */
   .subway__stop {
     position: absolute;
     top: 0;
     left: 0;
-    /* Paint above the cars: the train passes BEHIND each station dot. */
+    /* Paint above the cars: the train passes BEHIND each station marker. */
     z-index: 1;
     width: 10px;
     height: 10px;
     box-sizing: border-box;
-    border-radius: 50%;
+    border-radius: 2px;
     /* Fixed livery colors like the train itself, not theme vars — the MTA
-       map dot is white with a black ring in every theme. */
+       map marker is white with a black ring in every theme. */
     background: #f4f4f2;
     border: 2px solid #0a0a0a;
     offset-path: border-box;
     offset-rotate: 0deg;
-    animation: subway-stop-glow 20s var(--stop-delay, 0s) infinite;
   }
 
   .subway__car {
@@ -209,31 +204,12 @@ const cars = [
     90.9%, 100%   { fill: #16262f; }
   }
 
-  /* Station dot dwell indicator, authored for STOP 1's window in subway-ride
-     (11%–15.4%); the other stops replay it via their negative delays. The
-     dot flicks green while the train sits at the platform, then snaps back
-     to a plain map dot on departure. */
-  @keyframes subway-stop-glow {
-    0%, 10.9% {
-      background: #f4f4f2;
-    }
-    11%, 15.4% {
-      background: var(--mta-green, #6cbe45);
-    }
-    15.9%, 100% {
-      background: #f4f4f2;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .subway__car {
       animation: none; /* parks at the first station via the base offset-distance */
     }
     .subway__win {
       animation: none;
-    }
-    .subway__stop {
-      animation: none; /* plain map dots, no glow cycle */
     }
   }
 </style>

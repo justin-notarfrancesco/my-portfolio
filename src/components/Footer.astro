@@ -19,7 +19,7 @@ const socials = [
 <footer class="footer">
   <div class="footer__inner container">
     <div class="footer__brand">
-      <a href="/" class="footer__logo" aria-label="Justin Notarfrancesco — home">
+      <a href="/" class="footer__logo" aria-label="Justin Notarfrancesco — home" data-umami-event="footer-click" data-umami-event-destination="/">
         <LineBadge label="J" size={48} title="Home" eager={false}/>
         <span>
           <strong>Justin Notarfrancesco</strong><br />
@@ -31,7 +31,7 @@ const socials = [
     <nav class="footer__nav" aria-label="Footer">
       <span class="label text-dim">Directory</span>
       <ul>
-        {nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        {nav.map((l) => <li><a href={l.href} data-umami-event="footer-click" data-umami-event-destination={l.href}>{l.label}</a></li>)}
       </ul>
     </nav>
 
@@ -41,7 +41,12 @@ const socials = [
         {
           socials.map((s) => (
             <li>
-              <a href={s.href} {...s.href.startsWith('http') ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}>
+              <a
+                href={s.href}
+                data-umami-event="footer-click"
+                data-umami-event-destination={s.label.toLowerCase()}
+                {...s.href.startsWith('http') ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
+              >
                 {s.label}
               </a>
             </li>
@@ -53,7 +58,7 @@ const socials = [
 
   <div class="footer__base container">
     <span class="mono text-dim">&copy; {year} Justin Notarfrancesco</span>
-    <span class="mono text-dim">Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer"><i>Astro</i></a> &middot; Made in NYC ❤️</span>
+    <span class="mono text-dim">Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer" data-umami-event="footer-click" data-umami-event-destination="astro.build"><i>Astro</i></a> &middot; Made in NYC ❤️</span>
   </div>
 </footer>
 

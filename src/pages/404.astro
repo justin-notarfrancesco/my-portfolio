@@ -16,12 +16,19 @@ import LineBadge from '../components/LineBadge.astro';
         This stop isn&rsquo;t on the line. The page may have moved, or the link ran express past it.
       </p>
       <div class="notfound__cta">
-        <a class="btn btn--primary" href="/">Back to Home &rarr;</a>
-        <a class="btn btn--ghost" href="/projects">View Work</a>
+        <a class="btn btn--primary" href="/" data-umami-event="cta-click" data-umami-event-destination="/">Back to Home &rarr;</a>
+        <a class="btn btn--ghost" href="/projects" data-umami-event="cta-click" data-umami-event-destination="/projects">View Work</a>
       </div>
     </div>
   </section>
 </Layout>
+
+<script is:inline>
+  // Umami only loads in production; the guard keeps dev and blocked clients silent.
+  if (typeof umami !== 'undefined') {
+    umami.track('not-found', { path: window.location.pathname });
+  }
+</script>
 
 <style>
   .notfound {

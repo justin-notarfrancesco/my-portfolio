@@ -2,7 +2,6 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import Analytics from '@vercel/analytics/astro'
 
 interface Props {
   title?: string;
@@ -49,9 +48,19 @@ const fullTitle = title.includes('Notarfrancesco') ? title : `${title} — Justi
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+
+    {
+      import.meta.env.PROD && (
+        <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id={import.meta.env.PUBLIC_UMAMI_WEBSITE_ID}
+          data-domains="notar.nyc"
+        />
+      )
+    }
   </head>
   <body>
-    <Analytics />
     <Nav />
     <main id="main">
       <slot />

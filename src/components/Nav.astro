@@ -14,7 +14,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
 <header class="nav">
   <a href="#main" class="skip-link">Skip to content</a>
   <div class="nav__inner container">
-    <a class="brand" href="/" aria-label="Justin Notarfrancesco — home">
+    <a class="brand" href="/" aria-label="Justin Notarfrancesco — home" data-umami-event="nav-click" data-umami-event-destination="/">
       <img class="brand__bullet" src="/subway/J.svg" alt="" width="48" height="48" />
       <span class="brand__divider" aria-hidden="true"></span>
       <span class="brand__text">
@@ -41,7 +41,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
                   {l.label}
                 </span>
               ) : (
-                <a href={l.href} class="nav__link">
+                <a href={l.href} class="nav__link" data-umami-event="nav-click" data-umami-event-destination={l.href}>
                   {l.label}
                 </a>
               )}

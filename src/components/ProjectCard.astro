@@ -21,7 +21,7 @@ const href = `/projects/${slug}`;
 ---
 
 <article class="card" style={`--accent:${accent}`}>
-  <a class="card__media" href={href} aria-hidden="true" tabindex="-1">
+  <a class="card__media" href={href} aria-hidden="true" tabindex="-1" data-umami-event="project-click" data-umami-event-project={slug}>
     {
       image ? (
         <img src={image} alt="" loading="lazy" decoding="async" />
@@ -38,7 +38,7 @@ const href = `/projects/${slug}`;
     <div class="card__head">
       <LineBadge label={line} size={32} title={`${title} line`} eager={eager} />
       <h3 class="card__title">
-        <a href={href}>{title}</a>
+        <a href={href} data-umami-event="project-click" data-umami-event-project={slug}>{title}</a>
       </h3>
       {year && <span class="card__year mono text-dim">{year}</span>}
     </div>

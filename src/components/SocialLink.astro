@@ -31,6 +31,8 @@ const paths: Record<IconName, string> = {
   class="social-link"
   href={href}
   style={`--sl-color:${color}`}
+  data-umami-event="social-click"
+  data-umami-event-platform={icon}
   {...isExternal ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
 >
   <span class="social-link__icon" aria-hidden="true">

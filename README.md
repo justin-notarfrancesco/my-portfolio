@@ -33,11 +33,11 @@ Everything below is a deliberate engineering choice, not a framework default.
 
 - **📦 JavaScript only where it earns its place.** Anything that *can* be pure CSS *is*: the mobile
   navigation, the animated "in service" pulse, and the hamburger-to-X transition all run on a hidden
-  checkbox + `:checked` sibling selectors — zero JS. The build ships **no external JS bundle at all**;
-  the only client-side scripts are two inlined islands — the privacy-friendly analytics beacon
-  (~2.8 KB, every page) and a ~0.5 KB handler on the contact page that builds a pre-filled `mailto:`
-  link on submit. Every page is otherwise static HTML plus a single ~9.7 KB stylesheet (~2.7 KB
-  gzipped).
+  checkbox + `:checked` sibling selectors — zero JS. The build ships **no JS bundle at all**;
+  the only client-side scripts are a ~0.5 KB inline handler on the contact page that builds a
+  pre-filled `mailto:` link on submit, a few-line guard on the 404 page, and — in production
+  builds only — the ~2 KB Umami analytics tracker. Every page is otherwise static HTML plus a
+  single ~9.7 KB stylesheet (~2.7 KB gzipped).
 - **🧩 A real design system, not scattered styles.** One file (`src/styles/global.css`) is the single
   source of truth: MTA line palette, semantic role mapping, fluid type scale, spacing, and layout
   tokens as CSS custom properties. The palette is *also* exposed as a typed module
@@ -67,7 +67,7 @@ Everything below is a deliberate engineering choice, not a framework default.
 | Language | **TypeScript** (strict) | Type safety down to the content frontmatter. |
 | Styling | **Hand-authored CSS** with custom-property design tokens | No utility framework; the design system *is* the styling layer. |
 | Content | **Astro Content Collections + Zod** | Schema-validated Markdown as a lightweight CMS. |
-| Analytics | **@vercel/analytics** | The only third-party runtime dependency. |
+| Analytics | **Umami Cloud** | Privacy-friendly script tag, production builds only — no runtime npm dependency. |
 | Hosting | **Vercel** | Static output, edge-delivered. |
 
 ## 🗺️ Architecture
@@ -114,6 +114,23 @@ Semantic roles map onto real MTA lines:
 - 🟠 **Orange (B/D/F/M)** — arrival-board accent
 
 The entire site — palette, type scale, spacing — retunes from that one stylesheet.
+
+## 📊 Analytics
+
+The site uses [**Umami Cloud**](https://umami.is) — a privacy-first, cookieless alternative to
+Google Analytics (no consent banner needed). Like everything else here, it's wired up deliberately:
+
+- **Production only.** The tracker renders in `src/layouts/Layout.astro` behind
+  `import.meta.env.PROD`, with the website ID injected from `PUBLIC_UMAMI_WEBSITE_ID` in Vercel's
+  env settings (see [`.env.example`](.env.example)). Local dev ships zero analytics code, and
+  `data-domains="notar.nyc"` keeps `*.vercel.app` preview deploys out of the stats.
+- **Declarative custom events.** Meaningful interactions — nav, footer, social, project, and
+  contact clicks — are instrumented with Umami's HTML `data-umami-event` attributes, so event
+  tracking adds no JavaScript. The one scripted event is a guarded `not-found` beacon on the 404
+  page that records the missing path.
+- **No PII, ever.** Events carry at most 1–2 properties from a small vocabulary
+  (`destination`, `platform`, `project`, `target`, `path`) — no emails, no free text, no query
+  strings.
 
 ## 🏃 Running locally
 

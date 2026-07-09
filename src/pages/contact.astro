@@ -44,10 +44,10 @@ const socials = [
               <label for="message" class="label">Message</label>
               <textarea id="message" name="message" rows="5" required></textarea>
             </div>
-            <button type="submit" class="btn btn--primary">Send &rarr;</button>
+            <button type="submit" class="btn btn--primary" data-umami-event="contact-click" data-umami-event-target="form">Send &rarr;</button>
             <p class="form__note text-dim mono">
               Opens your mail client — no data leaves your device. Prefer to write directly?&nbsp;
-              <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+              <a href={`mailto:${EMAIL}`} data-umami-event="contact-click" data-umami-event-target="mailto">{EMAIL}</a>
             </p>
           </form>
         </div>

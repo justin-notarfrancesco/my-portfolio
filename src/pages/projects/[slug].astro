@@ -33,12 +33,28 @@ const accent = resolveColor(data.lineColor);
           <div class="detail__meta">
             {data.year && <span class="mono label">{data.year}</span>}
             {data.liveUrl && (
-              <a class="btn btn--primary" href={data.liveUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                class="btn btn--primary"
+                href={data.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-umami-event="project-click"
+                data-umami-event-project={project.id}
+                data-umami-event-target="demo"
+              >
                 Live Site &rarr;
               </a>
             )}
             {data.repoUrl && (
-              <a class="btn btn--ghost" href={data.repoUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                class="btn btn--ghost"
+                href={data.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-umami-event="project-click"
+                data-umami-event-project={project.id}
+                data-umami-event-target="repo"
+              >
                 Source
               </a>
             )}

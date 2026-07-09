@@ -116,10 +116,11 @@ const cars = [
     height: 6px;
     box-sizing: border-box;
     border-radius: 2px;
-    /* Fixed livery colors like the train itself, not theme vars — the MTA
-       map marker is white with a black ring in every theme. */
+    /* White fill stays fixed like the train's livery, but the ring picks up
+       the same hairline color as the profile frame's border so the marker
+       reads as part of the same UI, not a separate map layer. */
     background: #f4f4f2;
-    border: 2px solid #0a0a0a;
+    border: 2px solid var(--color-rule);
     offset-path: border-box;
     offset-rotate: 0deg;
   }

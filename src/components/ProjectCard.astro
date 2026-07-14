@@ -21,7 +21,7 @@ const href = `/projects/${slug}`;
 ---
 
 <article class="card" style={`--accent:${accent}`}>
-  <a class="card__media" href={href} aria-hidden="true" tabindex="-1" data-umami-event="project-click" data-umami-event-project={slug}>
+  <div class="card__media">
     {
       image ? (
         <img src={image} alt="" loading="lazy" decoding="async" />
@@ -32,13 +32,13 @@ const href = `/projects/${slug}`;
         </span>
       )
     }
-  </a>
+  </div>
 
   <div class="card__body">
     <div class="card__head">
       <LineBadge label={line} size={32} title={`${title} line`} eager={eager} />
       <h3 class="card__title">
-        <a href={href} data-umami-event="project-click" data-umami-event-project={slug}>{title}</a>
+        <a class="card__link" href={href} data-umami-event="project-click" data-umami-event-project={slug}>{title}</a>
       </h3>
       {year && <span class="card__year mono text-dim">{year}</span>}
     </div>
@@ -54,6 +54,7 @@ const href = `/projects/${slug}`;
 
 <style>
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--color-surface);
@@ -117,6 +118,14 @@ const href = `/projects/${slug}`;
   .card__title a:hover {
     color: var(--accent);
     text-decoration: none;
+  }
+  /* Stretch the title link over the whole card so the entire tile is
+     clickable, while keeping a single real anchor for accessibility. */
+  .card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
   }
   .card__year {
     margin-left: auto;

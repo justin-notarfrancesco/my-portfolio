@@ -14,7 +14,7 @@ order: 1
 
 ## Overview
 
-I spent five years building financial UI at JPMorgan Chase, where the money was real
+I've spent five years building financial UI at JPMorgan Chase, where the money is real
 and the tooling had decades of institutional weight behind it. Idle brings that
 discipline to the other end of the market: idle cash is a silent expense — checking
 earns next to nothing while T-bills pay real yield — so Idle gives startups T-bill

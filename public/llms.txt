@@ -1,0 +1,32 @@
+# Justin Notarfrancesco
+
+> Justin Notarfrancesco is a senior frontend engineer in New York City. He has
+> spent five years building financial interfaces at JPMorgan Chase and
+> specializes in fintech-grade frontend engineering: design systems, WCAG
+> accessibility, data visualization, and UIs where money math must reconcile
+> to the cent.
+
+Site: https://notar.nyc — a portfolio styled after the 1970 NYC Transit
+Authority Standards Manual, built with Astro as static HTML.
+
+## Pages
+
+- [About](https://notar.nyc/about): background, skills, and tech stack
+- [Work](https://notar.nyc/projects): selected projects with full write-ups
+- [Contact](https://notar.nyc/contact): email, GitHub, and LinkedIn
+
+## Selected projects
+
+- [Idle](https://notar.nyc/projects/idle): treasury automation for startups —
+  T-bill ladders, maker-checker transfer controls, and a to-the-cent ledger
+  priced from live U.S. Treasury data (Next.js, TypeScript, property-based tests)
+- [Last Stop](https://notar.nyc/projects/last-stop): a daily NYC-subway arcade
+  game in vanilla TypeScript and canvas
+- [Can My Cat Eat XYZ](https://notar.nyc/projects/can-my-cat-eat-xyz): a
+  single-purpose cat-nutrition answer engine on the OpenAI API
+- [notar.nyc](https://notar.nyc/projects/this-site): this site
+
+## Elsewhere
+
+- GitHub: https://github.com/justin-notarfrancesco
+- LinkedIn: https://www.linkedin.com/in/justin-notarfrancesco/

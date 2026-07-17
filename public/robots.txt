@@ -1,0 +1,21 @@
+# notar.nyc — everything is public, index away.
+User-agent: *
+Allow: /
+
+# AI crawlers are explicitly welcome (GEO: being citable beats being hidden).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://notar.nyc/sitemap-index.xml

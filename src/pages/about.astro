@@ -1,6 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LineBadge from '../components/LineBadge.astro';
+import { PERSON, SITE_URL } from '../lib/schema';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': `${SITE_URL}/about#page`,
+  url: `${SITE_URL}/about`,
+  name: 'About Justin Notarfrancesco',
+  mainEntity: PERSON,
+};
 
 // Skills grouped like a service guide, each mapped to a line color.
 const skillGroups = [
@@ -38,7 +48,12 @@ const stats = [
 ];
 ---
 
-<Layout title="About" description="About Justin Notarfrancesco — a senior frontend engineer based in New York City.">
+<Layout
+  title="About"
+  description="About Justin Notarfrancesco — a senior frontend engineer in New York City with five years building financial interfaces at JPMorgan Chase."
+  type="profile"
+>
+  <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(schema)} />
   <section class="section">
     <div class="container">
       <header class="page-head">
@@ -49,8 +64,9 @@ const stats = [
       <div class="about">
         <div class="about__bio stack">
           <p class="lede">
-            I&rsquo;m Justin — a senior frontend engineer based in <a href="https://en.wikipedia.org/wiki/Manhattan" target="_blank" rel="noopener noreferrer"><i>Manhattan</i></a>. For over half a decade, I&rsquo;ve
-            been designing and building web interfaces where speed, accessibility, and ease of use are my top priorities. <b>I build digital products that people love to use.</b>
+            I&rsquo;m Justin — a senior frontend engineer based in <a href="https://en.wikipedia.org/wiki/Manhattan" target="_blank" rel="noopener noreferrer"><i>Manhattan</i></a>. I&rsquo;ve spent the last
+            five years building financial interfaces at JPMorgan Chase — web products where speed, accessibility, and to-the-cent
+            correctness are non-negotiable. <b>I build digital products that people love to use.</b>
           </p>
           <p class="text-dim">
             My approach borrows from the city I live in: the best systems, like the subway, disappear into
@@ -59,7 +75,8 @@ const stats = [
             effortless.
           </p>
           <p class="text-dim">
-            I&rsquo;ve led design-system work, shipped headless commerce, and built interactive data stories.
+            I&rsquo;ve led design-system work, shipped headless commerce, and built the kind of financial
+            UI where a ledger has to reconcile to the cent and a transfer needs two sets of eyes.
             I&rsquo;m happiest at the intersection of engineering rigor and design craft, translating between
             the two so a team can move fast without breaking the experience.
           </p>

@@ -7,13 +7,31 @@ import NowArriving from '../components/NowArriving.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import SubwayTrain from '../components/SubwayTrain.astro';
 import profile from '../assets/profile.svg';
+import { PERSON, SITE_URL } from '../lib/schema';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const featured = projects.filter((p) => p.data.featured).slice(0, 3);
 const featuredList = featured.length ? featured : projects.slice(0, 3);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    PERSON,
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#site`,
+      url: SITE_URL,
+      name: 'Justin Notarfrancesco',
+      description:
+        'Portfolio of Justin Notarfrancesco, a senior frontend engineer in New York City building financial interfaces at JPMorgan Chase.',
+      about: { '@id': PERSON['@id'] },
+    },
+  ],
+};
 ---
 
 <Layout>
+  <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(schema)} />
   <!-- NOW ARRIVING -->
   <div class="container hero__arriving">
     <NowArriving />
@@ -27,6 +45,10 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
         <p class="hero__title label">Senior Frontend Engineer</p>
         <p class="hero__tagline text-dim">
           Your favorite engineer's favorite engineer.
+        </p>
+        <p class="hero__subline text-dim">
+          Five years building financial interfaces at JPMorgan Chase &mdash; design-system
+          rigor, WCAG accessibility, and UIs that reconcile to the cent.
         </p>
 
         <div class="hero__actions">
@@ -125,6 +147,11 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
   .hero__tagline {
     font-size: 1.15rem;
     max-width: 46ch;
+    margin-bottom: 0.6rem;
+  }
+  .hero__subline {
+    font-size: 0.95rem;
+    max-width: 46ch;
     margin-bottom: 1.75rem;
   }
   .hero__actions {
@@ -215,7 +242,8 @@ const featuredList = featured.length ? featured : projects.slice(0, 3);
     .hero__intro {
       text-align: center;
     }
-    .hero__tagline {
+    .hero__tagline,
+    .hero__subline {
       margin-inline: auto;
     }
     .hero__actions,

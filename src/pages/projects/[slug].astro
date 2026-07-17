@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import LineBadge from '../../components/LineBadge.astro';
 import { resolveColor } from '../../lib/theme';
+import { PERSON_REF, SITE_URL } from '../../lib/schema';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -16,9 +17,25 @@ const { project } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
 const accent = resolveColor(data.lineColor);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  '@id': `${SITE_URL}/projects/${project.id}#code`,
+  name: data.title,
+  description: data.description,
+  url: `${SITE_URL}/projects/${project.id}`,
+  ...(data.repoUrl && { codeRepository: data.repoUrl }),
+  ...(data.liveUrl && { sameAs: data.liveUrl }),
+  ...(data.image && { image: new URL(data.image, SITE_URL).href }),
+  ...(data.year && { dateCreated: String(data.year) }),
+  keywords: data.techStack.join(', '),
+  author: PERSON_REF,
+};
 ---
 
-<Layout title={data.title} description={data.description}>
+<Layout title={data.title} description={data.description} type="article" {...(data.image && { image: data.image, imageAlt: `${data.title} screenshot` })}>
+  <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(schema)} />
   <article class="section" style={`--accent:${accent}`}>
     <div class="container detail">
       <a class="back" href="/projects">&larr; All work</a>

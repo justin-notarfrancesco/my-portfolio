@@ -8,17 +8,24 @@ interface Props {
   description?: string;
   /** Absolute or root-relative path to an OG image under /public. */
   image?: string;
+  imageAlt?: string;
+  /** Open Graph object type: 'profile' for about, 'article' for project pages. */
+  type?: 'website' | 'profile' | 'article';
 }
 
 const {
   title = 'Justin Notarfrancesco — Senior Frontend Engineer',
-  description = 'Justin Notarfrancesco is a senior frontend engineer in New York City building fast, accessible, design-led web experiences.',
+  description = 'Justin Notarfrancesco is a senior frontend engineer in New York City with five years of experience building financial interfaces at JPMorgan Chase.',
   image = '/og.png',
+  imageAlt = 'Justin Notarfrancesco — Senior Frontend Engineer, New York City. NYC subway-style sign with N, A, B, and 6 line bullets.',
+  type = 'website',
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://notar.nyc');
 const canonical = new URL(Astro.url.pathname, site).href;
 const ogImage = new URL(image, site).href;
+// Only the default card has known dimensions; page-supplied images vary.
+const ogSize = image === '/og.png' ? { width: 1200, height: 630 } : null;
 const fullTitle = title.includes('Notarfrancesco') ? title : `${title} — Justin Notarfrancesco`;
 ---
 
@@ -27,7 +34,9 @@ const fullTitle = title.includes('Notarfrancesco') ? title : `${title} — Justi
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/subway/J.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#0a0a0a" />
 
@@ -36,18 +45,24 @@ const fullTitle = title.includes('Notarfrancesco') ? title : `${title} — Justi
     <link rel="canonical" href={canonical} />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Justin Notarfrancesco" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    {ogSize && <meta property="og:image:width" content={String(ogSize.width)} />}
+    {ogSize && <meta property="og:image:height" content={String(ogSize.height)} />}
+    <meta property="og:image:alt" content={imageAlt} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <slot name="head" />
 
     {
       import.meta.env.PROD && (

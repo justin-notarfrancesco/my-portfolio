@@ -1,50 +1,50 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import LineBadge from '../components/LineBadge.astro';
-import { PERSON, SITE_URL } from '../lib/schema';
+import Layout from "../layouts/Layout.astro";
+import LineBadge from "../components/LineBadge.astro";
+import { PERSON, SITE_URL } from "../lib/schema";
 
 const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'ProfilePage',
-  '@id': `${SITE_URL}/about#page`,
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": `${SITE_URL}/about#page`,
   url: `${SITE_URL}/about`,
-  name: 'About Justin Notarfrancesco',
+  name: "About Justin Notarfrancesco",
   mainEntity: PERSON,
 };
 
 // Skills grouped like a service guide, each mapped to a line color.
 const skillGroups = [
   {
-    line: 'A',
-    title: 'Core',
-    skills: ['TypeScript', 'JavaScript (ESNext)', 'HTML5', 'Semantic CSS'],
+    line: "A",
+    title: "Core",
+    skills: ["TypeScript", "JavaScript (ESNext)", "HTML5", "Semantic CSS"],
   },
   {
-    line: 'F',
-    title: 'Frameworks',
-    skills: ['Astro', 'React', 'Svelte', 'Next.js'],
+    line: "F",
+    title: "Frameworks",
+    skills: ["Astro", "React", "Svelte", "Next.js"],
   },
   {
-    line: 'N',
-    title: 'Design & UI',
-    skills: ['Design Systems', 'Figma', 'Motion', 'Data Visualization'],
+    line: "N",
+    title: "Design & UI",
+    skills: ["Design Systems", "Figma", "Motion", "Data Visualization"],
   },
   {
-    line: '6',
-    title: 'Quality',
-    skills: ['Accessibility (WCAG)', 'Performance', 'Testing', 'CI/CD'],
+    line: "6",
+    title: "Quality",
+    skills: ["Accessibility (WCAG)", "Performance", "Testing", "CI/CD"],
   },
   {
-    line: 'L',
-    title: 'Platform',
-    skills: ['Node.js', 'Vite', 'Edge Functions', 'Web Components'],
+    line: "L",
+    title: "Platform",
+    skills: ["Node.js", "Vite", "Edge Functions", "Web Components"],
   },
 ];
 
 const stats = [
-  { value: '5+', label: 'Years Experience', line: '3' },
-  { value: '4+', label: 'Projects Shipped', line: 'F' },
-  { value: 'NYC', label: 'Home Base', line: '7', express: true },
+  { value: "5+", label: "Years Experience", line: "3" },
+  { value: "4+", label: "Projects Shipped", line: "F" },
+  { value: "NYC", label: "Home Base", line: "7", express: true },
 ];
 ---
 
@@ -53,35 +53,59 @@ const stats = [
   description="About Justin Notarfrancesco — a senior frontend engineer in New York City with five years building financial interfaces at JPMorgan Chase."
   type="profile"
 >
-  <script type="application/ld+json" slot="head" is:inline set:html={JSON.stringify(schema)} />
+  <script
+    type="application/ld+json"
+    slot="head"
+    is:inline
+    set:html={JSON.stringify(schema)}
+  />
   <section class="section">
     <div class="container">
       <header class="page-head">
-        <p class="eyebrow"><LineBadge label="E" size={32} eager /> <span class="eyebrow__eta mono">Station Guide</span></p>
+        <p class="eyebrow">
+          <LineBadge label="E" size={32} eager />
+          <span class="eyebrow__eta mono">Station Guide</span>
+        </p>
         <h1>About</h1>
       </header>
 
       <div class="about">
         <div class="about__bio stack">
           <p class="lede">
-            I&rsquo;m Justin, a senior frontend engineer based in <a href="https://en.wikipedia.org/wiki/Manhattan" target="_blank" rel="noopener noreferrer"><i>Manhattan</i></a>.
-            For the last five years at JPMorgan Chase, I've built large-scale React applications that millions of users rely on — where sub-second speed and ironclad accessibility
-            aren't suggestions, they're requirements. Along the way, I've led frontend architecture for major digital experiences and owned greenfield platforms end-to-end.
+            I&rsquo;m Justin, a senior frontend engineer based in <a
+              href="https://en.wikipedia.org/wiki/Manhattan"
+              target="_blank"
+              rel="noopener noreferrer"><i>Manhattan</i></a
+            >. For the last five years at JPMorgan Chase, I've built large-scale
+            React applications that millions of users rely on — where sub-second
+            speed and ironclad accessibility aren't suggestions, they're
+            requirements. Along the way, I've led frontend architecture for
+            major digital experiences and owned greenfield platforms end-to-end.
           </p>
           <p class="text-dim">
-            <b>I build digital products that people love to use</b>, and my approach borrows from the city I live in. The best systems, like the subway, disappear into
-            usefulness: good wayfinding, honest typography, a strict grid, and color that means something.
-            I care about the details a user never consciously notices — the ones that make an interface feel effortless.
+            <b>I build digital products that people love to use</b>, and my
+            approach borrows from the city I live in. The best systems, like the
+            subway, disappear into usefulness: good wayfinding, honest
+            typography, a strict grid, and color that means something. I care
+            about the details a user never consciously notices — the ones that
+            make an interface feel effortless.
           </p>
           <p class="text-dim">
-            I&rsquo;m happiest at the intersection of engineering rigor and design craft, translating between the two so a team can move fast without breaking the experience.
+            I&rsquo;m happiest at the intersection of engineering rigor and
+            design craft, translating between the two so a team can move fast
+            without breaking the experience.
           </p>
 
           <ul class="stats" aria-label="At a glance">
             {
               stats.map((s) => (
                 <li class="stat">
-                  <LineBadge label={s.line} size={32} title={s.label} express={s.express} />
+                  <LineBadge
+                    label={s.line}
+                    size={32}
+                    title={s.label}
+                    express={s.express}
+                  />
                   <span class="stat__value">{s.value}</span>
                   <span class="stat__label label text-dim">{s.label}</span>
                 </li>
@@ -95,7 +119,10 @@ const stats = [
 
       <section class="skills" aria-labelledby="skills-title">
         <div class="section-head">
-          <p class="eyebrow"><LineBadge label="N" size={32} /> <span class="eyebrow__eta mono">Service Guide</span></p>
+          <p class="eyebrow">
+            <LineBadge label="N" size={32} />
+            <span class="eyebrow__eta mono">Service Guide</span>
+          </p>
           <h2 id="skills-title">Skills &amp; Tech Stack</h2>
         </div>
 
@@ -108,7 +135,9 @@ const stats = [
                   <h3>{g.title}</h3>
                 </div>
                 <ul>
-                  {g.skills.map((s) => <li>{s}</li>)}
+                  {g.skills.map((s) => (
+                    <li>{s}</li>
+                  ))}
                 </ul>
               </div>
             ))

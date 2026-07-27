@@ -29,4 +29,4 @@ or "No.", followed by two or three sentences of why.
 
 ## Outcome
 
-Live and free to use — ask it about grapes before your cat finds out the hard way.
+Live and free to use: ask it about grapes before your cat finds out the hard way.

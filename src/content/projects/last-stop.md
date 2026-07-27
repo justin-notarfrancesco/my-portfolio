@@ -1,6 +1,6 @@
 ---
 title: "Last Stop"
-description: "Snake, but you're driving the NYC subway — swipe a 16-bit pixel-art train around a route map, couple on cars as you pick up passengers, and share your crash as a Wordle-style emoji card."
+description: "Snake, but you're driving the NYC subway: swipe a 16-bit pixel-art train around a route map, couple on cars as you pick up passengers, and share your crash as a Wordle-style emoji card."
 techStack: ["TypeScript", "HTML Canvas", "Vite"]
 liveUrl: "https://last-stop-five.vercel.app"
 repoUrl: "https://github.com/justin-notarfrancesco/subway-snake"
@@ -14,8 +14,8 @@ order: 2
 
 ## Overview
 
-A daily arcade game built for the group chat. Everyone gets the same Daily Commute — a
-shared, date-seeded map with identical Track Work obstacles and passenger spawns — and
+A daily arcade game built for the group chat. Everyone gets the same Daily Commute (a
+shared, date-seeded map with identical Track Work obstacles and passenger spawns), and
 when you inevitably crash, you get a service-alert card ("Service Suspended — this
 train made 28 stops") and a five-line emoji result made for iMessage.
 
@@ -23,7 +23,7 @@ train made 28 stops") and a five-line emoji result made for iMessage.
 
 - A deterministic daily puzzle: one `mulberry32` PRNG seeded by the date drives the
   whole map, so every player worldwide compares the same commute.
-- Crisp pixel art at any screen density — drawn on a low-res offscreen canvas and
+- Crisp pixel art at any screen density, drawn on a low-res offscreen canvas and
   integer-scaled with smoothing off.
 - A Local → Express difficulty curve: the ticker speeds up and an EXP badge appears
   once your train hits 12 passengers.
@@ -32,5 +32,5 @@ train made 28 stops") and a five-line emoji result made for iMessage.
 
 ## Outcome
 
-Vanilla TypeScript and a `<canvas>` — no framework, no runtime dependencies. The whole
+Vanilla TypeScript and a `<canvas>`, with no framework and no runtime dependencies. The whole
 game ships as a static bundle and the tutorial is one sentence: swipe anywhere.

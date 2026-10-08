@@ -26,7 +26,7 @@ Existing events (keep new names consistent with these):
 - `footer-click` — `destination` (all footer links, `src/components/Footer.astro`)
 - `social-click` — `platform` (`src/components/SocialLink.astro`)
 - `project-click` — `project`, plus `target` (`demo` | `repo`) on the project detail page's outbound buttons (`src/components/ProjectCard.astro`, `src/pages/projects/[slug].astro`)
-- `contact-click` — `target` (`form` | `mailto` | `resume-request`) (`src/pages/contact.astro`; the résumé row passes it via `SocialLink`'s `event` prop)
+- `contact-click` — `target` (`form` | `mailto`) (`src/pages/contact.astro`)
 - `cta-click` — `destination` (in-page CTAs on `src/pages/index.astro` and `src/pages/404.astro`)
 - `not-found` — `path` (JS `umami.track()` call in `src/pages/404.astro`, guarded with `typeof umami !== 'undefined'`; path only, never query strings)
 

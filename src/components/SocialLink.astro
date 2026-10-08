@@ -1,26 +1,17 @@
 ---
-type IconName = 'email' | 'github' | 'linkedin' | 'twitter' | 'external' | 'location' | 'clock' | 'document';
+type IconName = 'email' | 'github' | 'linkedin' | 'twitter' | 'external' | 'location';
 
 interface Props {
-  /** Omit for an informational row (no link, no tracking). */
-  href?: string;
+  href: string;
   label: string;
   /** Secondary line, e.g. the handle or address. */
   value?: string;
   icon: IconName;
   color?: string;
-  /** Umami event override; defaults to `social-click` with `platform` = icon. */
-  event?: { name: string; props: Record<string, string> };
 }
 
-const { href, label, value, icon, color = 'var(--color-link)', event } = Astro.props;
-const isExternal = href?.startsWith('http') ?? false;
-const tracking = event ?? { name: 'social-click', props: { platform: icon } };
-const trackingAttrs = Object.fromEntries([
-  ['data-umami-event', tracking.name],
-  ...Object.entries(tracking.props).map(([k, v]) => [`data-umami-event-${k}`, v]),
-]);
-const Tag = href ? 'a' : 'div';
+const { href, label, value, icon, color = 'var(--color-link)' } = Astro.props;
+const isExternal = href.startsWith('http');
 
 // Minimal inline icon set (stroke-based, 24x24).
 const paths: Record<IconName, string> = {
@@ -33,16 +24,15 @@ const paths: Record<IconName, string> = {
     '<path d="M18 3h3l-7.5 8.5L22 21h-6l-4.5-6L6 21H3l8-9L2 3h6l4 5.5L18 3z"/>',
   external: '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/>',
   location: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
-  clock: '<circle cx="12" cy="12" r="9.5"/><path d="M12 7v5l3 2"/>',
-  document: '<path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h7"/>',
 };
 ---
 
-<Tag
-  class:list={['social-link', { 'social-link--static': !href }]}
+<a
+  class="social-link"
   href={href}
   style={`--sl-color:${color}`}
-  {...href ? trackingAttrs : {}}
+  data-umami-event="social-click"
+  data-umami-event-platform={icon}
   {...isExternal ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
 >
   <span class="social-link__icon" aria-hidden="true">
@@ -52,8 +42,8 @@ const paths: Record<IconName, string> = {
     <span class="social-link__label">{label}</span>
     {value && <span class="social-link__value mono">{value}</span>}
   </span>
-  {href && <span class="social-link__arrow mono" aria-hidden="true">&rsaquo;</span>}
-</Tag>
+  <span class="social-link__arrow mono" aria-hidden="true">&rsaquo;</span>
+</a>
 
 <style>
   .social-link {
@@ -71,7 +61,7 @@ const paths: Record<IconName, string> = {
       background 0.15s ease,
       transform 0.12s ease;
   }
-  .social-link:not(.social-link--static):hover {
+  .social-link:hover {
     text-decoration: none;
     border-color: var(--sl-color);
     background: var(--color-surface-2);

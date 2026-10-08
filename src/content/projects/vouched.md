@@ -1,9 +1,8 @@
 ---
 title: "Vouched"
-description: "A social trust network where word-of-mouth becomes a shareable page: one link for the plumbers, dentists, and realtors you'd actually send a friend to. Personal proof instead of anonymous reviews."
-techStack: ["Next.js", "React 19", "TypeScript", "Tailwind CSS", "shadcn/ui", "Vercel"]
+description: "Find local businesses through the people you know. Every recommendation carries a real name, there are no ads, and nobody can pay to rank higher. Browse by trade or city, or see who a friend vouches for."
+techStack: ["Next.js", "TypeScript", "Server Actions", "Tailwind CSS", "Cloudflare Turnstile", "Vercel"]
 liveUrl: "https://www.vouchedsoftware.com"
-repoUrl: "https://github.com/justin-notarfrancesco/vouched"
 image: "/projects/vouched.png"
 lineColor: "purple"
 line: "7"
@@ -14,23 +13,27 @@ order: 2
 
 ## Overview
 
-Recommendations for local services still live in group chats and half-remembered
-conversations. Vouched turns that word-of-mouth into a shareable record: a personal page
-of the service providers you actually use and would happily send a friend to. It leans on
-personal trust rather than anonymous ratings: a living list of the people you know and
-vouch for, from plumbers and dentists to realtors, accountants, and IT help.
+Asking around is still the best way to find a good mechanic or plumber, but those answers
+live in group chats and get lost. Vouched makes them searchable: people put their name
+behind the local businesses they'd send a friend to, and you find businesses through the
+people you know. There are no anonymous reviews, no ads, and no way to pay for a higher
+spot.
 
 ## What I built
 
-- A public profile page (`/u/[username]`) where each person's vouches read as considered
-  recommendations, not star ratings, with a share-ready link at the center of the flow.
-- An explore experience browsable by category and city (`/explore/[category]/[city]`), so
-  a referral is one search away.
-- A dashboard, feed, and requests flow for creating vouches and fielding asks from people
-  looking for a trusted provider.
-- FAQ structured data (JSON-LD) and per-route metadata so pages surface cleanly in search.
+- A business directory searchable by name or trade, with browse-by-trade and
+  browse-by-city filters and a page for every business.
+- A people directory, A to Z, where each person's page lists the businesses they vouch
+  for, so every recommendation comes with a name attached.
+- Passwordless sign-in by text message: enter a mobile number and get a 6-digit code. A
+  Cloudflare Turnstile check screens out bots before a code is sent.
+- An "Add your business" flow behind sign-in, so every listing is tied to a real account.
+- Progressive enhancement throughout: search is a plain GET form, the trade and city
+  pickers are native disclosure elements, and writes go through Next.js Server Actions, so
+  the core of the site works before client JavaScript loads.
 
 ## Outcome
 
-Built on Next.js 16 and React 19 with Tailwind v4 and shadcn/ui (Radix) components, so the
-interface stays accessible and consistent across every route. Deployed on Vercel.
+Live at vouchedsoftware.com, built with Next.js and Tailwind CSS and deployed on Vercel.
+The live version narrows an earlier prototype (profiles, a feed, a requests board) down
+to two jobs: find a business, and see who vouches for it.

@@ -8,8 +8,8 @@ image: "/projects/can-my-cat-eat-xyz.png"
 lineColor: "orange"
 line: "F"
 year: 2022
-featured: true
-order: 3
+featured: false
+order: 4
 ---
 
 ## Overview

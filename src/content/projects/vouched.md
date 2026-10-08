@@ -8,8 +8,8 @@ image: "/projects/vouched.png"
 lineColor: "purple"
 line: "7"
 year: 2026
-featured: false
-order: 4
+featured: true
+order: 2
 ---
 
 ## Overview

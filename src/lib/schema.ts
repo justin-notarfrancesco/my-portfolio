@@ -21,8 +21,6 @@ export const PERSON = {
   },
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'New York',
-    addressRegion: 'NY',
     addressCountry: 'US',
   },
   email: 'mailto:justin@notar.nyc',

@@ -19,10 +19,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
       <span class="brand__divider" aria-hidden="true"></span>
       <span class="brand__text">
         <span class="brand__name">Justin Notarfrancesco</span>
-        <span class="brand__sub label">
-          <span class="brand__status" aria-hidden="true"></span>
-          New York City
-        </span>
+        <span class="brand__sub label">Senior Frontend Engineer</span>
       </span>
     </a>
 
@@ -136,9 +133,6 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
     white-space: nowrap;
   }
   .brand__sub {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
     color: var(--color-text-dim);
     font-size: 0.6rem;
     letter-spacing: 0.16em;
@@ -146,31 +140,6 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
   }
   .brand:hover .brand__sub {
     color: var(--color-text);
-  }
-
-  /* "In service" indicator — a live arrival-board pulse */
-  .brand__status {
-    inline-size: 6px;
-    block-size: 6px;
-    border-radius: 50%;
-    background: var(--mta-green);
-    flex: none;
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--mta-green) 60%, transparent);
-    animation: brand-pulse 2.4s ease-out infinite;
-  }
-  @keyframes brand-pulse {
-    0% {
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--mta-green) 55%, transparent);
-    }
-    70%,
-    100% {
-      box-shadow: 0 0 0 5px transparent;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .brand__status {
-      animation: none;
-    }
   }
 
   .nav__menu ul {

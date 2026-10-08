@@ -4,12 +4,12 @@ import LineBadge from '../components/LineBadge.astro';
 import SocialLink from '../components/SocialLink.astro';
 
 const EMAIL = 'justin@notar.nyc';
+const RESUME_REQUEST = `mailto:${EMAIL}?subject=${encodeURIComponent('Résumé request')}`;
 
 const socials = [
   { icon: 'email', label: 'Email', value: EMAIL, href: `mailto:${EMAIL}`, color: 'var(--mta-red)' },
   { icon: 'github', label: 'GitHub', value: 'github.com/justin-notarfrancesco', href: 'https://github.com/justin-notarfrancesco', color: 'var(--mta-grey)' },
   { icon: 'linkedin', label: 'LinkedIn', value: 'in/justin-notarfrancesco', href: 'https://www.linkedin.com/in/justin-notarfrancesco/', color: 'var(--mta-blue)' },
-  { icon: 'location', label: 'Based in', value: 'Manhattan', href: 'https://www.google.com/maps?q=Manhattan', color: 'var(--mta-purple)' },
 ] as const;
 ---
 
@@ -26,6 +26,15 @@ const socials = [
           <h2 class="section-title label">Direct Lines</h2>
           <div class="channels">
             {socials.map((s) => <SocialLink icon={s.icon} label={s.label} value={s.value} href={s.href} color={s.color} />)}
+            <SocialLink
+              icon="document"
+              label="Résumé"
+              value="Available on request"
+              href={RESUME_REQUEST}
+              color="var(--mta-orange)"
+              event={{ name: 'contact-click', props: { target: 'resume-request' } }}
+            />
+            <SocialLink icon="clock" label="Time zone" value="US Eastern" color="var(--mta-purple)" />
           </div>
         </div>
 

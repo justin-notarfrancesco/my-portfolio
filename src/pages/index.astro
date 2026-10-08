@@ -6,7 +6,7 @@ import LineBadge from '../components/LineBadge.astro';
 import NowArriving from '../components/NowArriving.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import SubwayTrain from '../components/SubwayTrain.astro';
-import profile from '../assets/profile.svg';
+import profile from '../assets/profile.png';
 import { PERSON, SITE_URL } from '../lib/schema';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
@@ -23,7 +23,7 @@ const schema = {
       url: SITE_URL,
       name: 'Justin Notarfrancesco',
       description:
-        'Portfolio of Justin Notarfrancesco, a senior frontend engineer in New York City building financial interfaces at JPMorgan Chase.',
+        'Portfolio of Justin Notarfrancesco, a senior frontend engineer building financial interfaces at JPMorgan Chase.',
       about: { '@id': PERSON['@id'] },
     },
   ],
@@ -67,7 +67,7 @@ const schema = {
 
       <div class="hero__media">
         <div class="hero__frame">
-          <Image src={profile} alt="Portrait of Justin Notarfrancesco" width={480} height={480} loading="eager" />
+          <Image src={profile} alt="Portrait of Justin Notarfrancesco" width={480} height={480} densities={[1, 2]} loading="eager" />
         </div>
         <SubwayTrain />
       </div>
@@ -81,7 +81,7 @@ const schema = {
         <p class="eyebrow"><LineBadge label="7" size={32} title="7 express" express eager/> <span class="eyebrow__eta mono">EXPRESS SERVICE</span></p>
         <div class="section-head__row">
           <h2>Featured Work</h2>
-          <a class="section-head__all" href="/projects" data-umami-event="cta-click" data-umami-event-destination="/projects">All stops &rarr;</a>
+          <a class="section-head__all" href="/projects" data-umami-event="cta-click" data-umami-event-destination="/projects">All work &rarr;</a>
         </div>
       </div>
 

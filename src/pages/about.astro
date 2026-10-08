@@ -41,16 +41,19 @@ const skillGroups = [
   },
 ];
 
+// Recruiter quick-scan: seniority, stack, domain, and working hours.
 const stats = [
   { value: "5+", label: "Years Experience", line: "3" },
-  { value: "4+", label: "Projects Shipped", line: "F" },
-  { value: "NYC", label: "Home Base", line: "7", express: true },
+  { value: "Senior", label: "Frontend Engineer", line: "A" },
+  { value: "React + TS", label: "Core Stack", line: "F" },
+  { value: "Fintech", label: "JPMorgan Chase", line: "4" },
+  { value: "US Eastern", label: "Time Zone", line: "7", express: true },
 ];
 ---
 
 <Layout
   title="About"
-  description="About Justin Notarfrancesco, a senior frontend engineer in New York City with five years building financial interfaces at JPMorgan Chase."
+  description="About Justin Notarfrancesco, a senior frontend engineer with five years building financial interfaces at JPMorgan Chase."
   type="profile"
 >
   <script
@@ -72,11 +75,7 @@ const stats = [
       <div class="about">
         <div class="about__bio stack">
           <p class="lede">
-            I&rsquo;m Justin, a senior frontend engineer based in <a
-              href="https://en.wikipedia.org/wiki/Manhattan"
-              target="_blank"
-              rel="noopener noreferrer"><i>Manhattan</i></a
-            >. For the last five years at JPMorgan Chase, I've built large-scale
+            I&rsquo;m Justin, a senior frontend engineer. For the last five years at JPMorgan Chase, I've built large-scale
             React applications that millions of users rely on. The edge cases <em
               >are</em
             > the job: every error state, every dismissible popover, every
@@ -85,9 +84,9 @@ const stats = [
             platforms from scratch.
           </p>
           <p class="text-dim">
-            <b>That way of working borrows from the city I live in.</b> The best
-            systems, like the subway, disappear into usefulness: good wayfinding, honest
-            typography, a strict grid, and color that means something. I care
+            <b>That way of working borrows from Massimo Vignelli&rsquo;s 1970 subway
+            signage.</b> The best systems disappear into usefulness: good wayfinding,
+            honest typography, a strict grid, and color that means something. I care
             about the details a user never consciously notices, the ones that
             make an interface feel effortless.
             I&rsquo;m happiest at the intersection of engineering rigor and
@@ -95,7 +94,8 @@ const stats = [
             without breaking the experience.
           </p>
 
-          <ul class="stats" aria-label="At a glance">
+          <h2 class="stats__title label text-dim" id="glance-title">At a Glance</h2>
+          <ul class="stats" aria-labelledby="glance-title">
             {
               stats.map((s) => (
                 <li class="stat">
@@ -157,18 +157,23 @@ const stats = [
     line-height: 1.5;
   }
 
-  .stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    list-style: none;
+  .stats__title {
     margin: 2rem 0 0;
-    padding: 1.5rem 0 0;
+    padding-top: 1.5rem;
     border-top: 1px solid var(--color-rule);
+    font-size: 0.75rem;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 1.5rem 2rem;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
   }
   .stat {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
     column-gap: 0.6rem;
     align-items: center;

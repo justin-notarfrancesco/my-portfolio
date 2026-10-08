@@ -2,7 +2,7 @@
 title: "Vouched"
 description: "A social trust network where word-of-mouth becomes a shareable page: one link for the plumbers, dentists, and realtors you'd actually send a friend to. Personal proof instead of anonymous reviews."
 techStack: ["Next.js", "React 19", "TypeScript", "Tailwind CSS", "shadcn/ui", "Vercel"]
-liveUrl: "https://vouched-omega.vercel.app"
+liveUrl: "https://www.vouchedsoftware.com"
 repoUrl: "https://github.com/justin-notarfrancesco/vouched"
 image: "/projects/vouched.png"
 lineColor: "purple"

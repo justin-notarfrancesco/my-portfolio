@@ -31,7 +31,6 @@ export const PERSON = {
   knowsAbout: [
     'Frontend engineering',
     'Financial interfaces',
-    'Fintech',
     'Design systems',
     'TypeScript',
     'React',

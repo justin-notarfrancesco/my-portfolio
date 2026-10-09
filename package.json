@@ -14,9 +14,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/sitemap": "^3.7.4",
     "@astrojs/vercel": "^11.0.13",
-    "astro": "^7.0.6"
+    "astro": "^7.3.8"
   },
   "devDependencies": {
     "vitest": "^3.2.7"

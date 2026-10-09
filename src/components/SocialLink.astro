@@ -8,11 +8,14 @@ interface Props {
   value?: string;
   icon: IconName;
   color?: string;
-  /** Encoded address from `EMAIL_TOKEN`; `value` is shown until a human click reveals it. */
-  emailToken?: string;
+  /**
+   * Gate the address behind a human check (see `src/scripts/email-gate.ts`):
+   * the first click reveals it in place of `value`, the second opens mail.
+   */
+  protectedEmail?: boolean;
 }
 
-const { href, label, value, icon, color = 'var(--color-link)', emailToken } = Astro.props;
+const { href, label, value, icon, color = 'var(--color-link)', protectedEmail = false } = Astro.props;
 const isExternal = href.startsWith('http');
 
 // Minimal inline icon set (stroke-based, 24x24).
@@ -33,9 +36,14 @@ const paths: Record<IconName, string> = {
   class="social-link"
   href={href}
   style={`--sl-color:${color}`}
-  data-umami-event="social-click"
-  data-umami-event-platform={icon}
-  data-email-token={emailToken}
+  {...protectedEmail
+    ? {
+        'data-email-reveal': '',
+        'data-umami-event': 'contact-click',
+        'data-umami-event-target': 'reveal',
+        'data-umami-after': JSON.stringify({ event: 'social-click', platform: icon }),
+      }
+    : { 'data-umami-event': 'social-click', 'data-umami-event-platform': icon }}
   {...isExternal ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
 >
   <span class="social-link__icon" aria-hidden="true">
@@ -43,7 +51,7 @@ const paths: Record<IconName, string> = {
   </span>
   <span class="social-link__text">
     <span class="social-link__label">{label}</span>
-    {value && <span class="social-link__value mono" data-email-text={emailToken ? '' : undefined}>{value}</span>}
+    {value && <span class="social-link__value mono" data-email-text={protectedEmail ? '' : undefined}>{value}</span>}
   </span>
   <span class="social-link__arrow mono" aria-hidden="true">&rsaquo;</span>
 </a>
@@ -105,6 +113,10 @@ const paths: Record<IconName, string> = {
     font-size: 1.5rem;
     color: var(--color-text-dim);
     transition: color 0.15s ease;
+  }
+  /* Until the address is revealed, a click verifies rather than navigates. */
+  .social-link[data-email-reveal]:not([data-email-revealed]) .social-link__arrow {
+    visibility: hidden;
   }
   .social-link:hover .social-link__arrow {
     color: var(--sl-color);

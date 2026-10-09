@@ -1,10 +1,6 @@
-import { encodeEmail } from './email';
-
 /**
- * Server-only. Import this from Astro frontmatter, never from a client
- * `<script>`, or the plain address ships in the JS bundle. Pages should render
- * `EMAIL_TOKEN`, not `EMAIL`.
+ * Server-only. Imported solely by the on-demand `/api/email` route, so the
+ * address never appears in prerendered HTML or the client bundle — it is only
+ * handed out after a Turnstile check passes.
  */
-const EMAIL = 'justinnotar@gmail.com';
-
-export const EMAIL_TOKEN = encodeEmail(EMAIL);
+export const EMAIL = 'justinnotar@gmail.com';

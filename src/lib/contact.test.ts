@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildMailtoHref } from './contact';
 
-const TO = 'justin@notar.nyc';
+const TO = 'justinnotar@gmail.com';
 
 describe('buildMailtoHref', () => {
   it('produces a valid mailto: URL with subject and body query params', () => {

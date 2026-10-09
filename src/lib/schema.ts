@@ -23,7 +23,7 @@ export const PERSON = {
     '@type': 'PostalAddress',
     addressCountry: 'US',
   },
-  email: 'mailto:justin@notar.nyc',
+  email: 'mailto:justinnotar@gmail.com',
   sameAs: [
     'https://github.com/justin-notarfrancesco',
     'https://www.linkedin.com/in/justin-notarfrancesco/',

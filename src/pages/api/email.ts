@@ -22,7 +22,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
   if (!token) return json({ error: 'bad-request' }, 400);
 
-  const ok = await verifyTurnstile(token, TURNSTILE_SECRET_KEY, clientAddress).catch(() => false);
+  const ok = await verifyTurnstile(token, TURNSTILE_SECRET_KEY, clientAddress).catch((err) => {
+    console.warn('turnstile siteverify threw', String(err));
+    return false;
+  });
   if (!ok) return json({ error: 'verification-failed' }, 403);
 
   return json({ email: EMAIL });

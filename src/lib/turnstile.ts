@@ -18,7 +18,10 @@ export async function verifyTurnstile(token: string, secret: string, ip?: string
   const body = new URLSearchParams({ secret, response: token });
   if (ip) body.set('remoteip', ip);
   const res = await fetch(SITEVERIFY_URL, { method: 'POST', body });
-  if (!res.ok) return false;
+  if (!res.ok) {
+    console.warn('turnstile siteverify http error', res.status);
+    return false;
+  }
   const data = (await res.json()) as { success?: boolean; 'error-codes'?: string[]; hostname?: string };
   if (!data.success) {
     // Error codes only (e.g. invalid-input-secret, timeout-or-duplicate); no visitor data.

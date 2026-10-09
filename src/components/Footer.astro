@@ -1,5 +1,6 @@
 ---
 import LineBadge from './LineBadge.astro';
+import { EMAIL_TOKEN } from '../lib/email-address';
 
 const year = new Date().getFullYear();
 
@@ -12,7 +13,8 @@ const nav = [
 const socials = [
   { href: 'https://github.com/justin-notarfrancesco', label: 'GitHub' },
   { href: 'https://www.linkedin.com/in/justin-notarfrancesco/', label: 'LinkedIn' },
-  { href: 'mailto:justinnotar@gmail.com', label: 'Email' },
+  // No-JS fallback goes to the contact page; the real mailto is swapped in on click.
+  { href: '/contact', label: 'Email', emailToken: EMAIL_TOKEN },
 ];
 ---
 
@@ -45,6 +47,7 @@ const socials = [
                 href={s.href}
                 data-umami-event="footer-click"
                 data-umami-event-destination={s.label.toLowerCase()}
+                data-email-token={s.emailToken}
                 {...s.href.startsWith('http') ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
               >
                 {s.label}

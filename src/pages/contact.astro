@@ -2,11 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import LineBadge from '../components/LineBadge.astro';
 import SocialLink from '../components/SocialLink.astro';
-
-const EMAIL = 'justinnotar@gmail.com';
+import { EMAIL_TOKEN } from '../lib/email-address';
 
 const socials = [
-  { icon: 'email', label: 'Email', value: EMAIL, href: `mailto:${EMAIL}`, color: 'var(--mta-red)' },
+  { icon: 'email', label: 'Email', value: 'Click to reveal', href: '/contact', color: 'var(--mta-red)', emailToken: EMAIL_TOKEN },
   { icon: 'github', label: 'GitHub', value: 'github.com/justin-notarfrancesco', href: 'https://github.com/justin-notarfrancesco', color: 'var(--mta-grey)' },
   { icon: 'linkedin', label: 'LinkedIn', value: 'in/justin-notarfrancesco', href: 'https://www.linkedin.com/in/justin-notarfrancesco/', color: 'var(--mta-blue)' },
 ] as const;
@@ -24,13 +23,13 @@ const socials = [
         <div class="contact__channels">
           <h2 class="section-title label">Direct Lines</h2>
           <div class="channels">
-            {socials.map((s) => <SocialLink icon={s.icon} label={s.label} value={s.value} href={s.href} color={s.color} />)}
+            {socials.map((s) => <SocialLink icon={s.icon} label={s.label} value={s.value} href={s.href} color={s.color} emailToken={'emailToken' in s ? s.emailToken : undefined} />)}
           </div>
         </div>
 
         <div class="contact__form-wrap">
           <h2 class="section-title label">Send a Message</h2>
-          <form class="form" id="contact-form" data-email={EMAIL}>
+          <form class="form" id="contact-form" data-email-token={EMAIL_TOKEN}>
             <div class="field">
               <label for="name" class="label">Name</label>
               <input id="name" name="name" type="text" autocomplete="name" required />
@@ -46,7 +45,7 @@ const socials = [
             <button type="submit" class="btn btn--primary" data-umami-event="contact-click" data-umami-event-target="form">Send &rarr;</button>
             <p class="form__note text-dim mono">
               Opens your mail client; no data leaves your device. Prefer to write directly?&nbsp;
-              <a href={`mailto:${EMAIL}`} data-umami-event="contact-click" data-umami-event-target="mailto">{EMAIL}</a>
+              <a href="/contact" data-email-token={EMAIL_TOKEN} data-umami-event="contact-click" data-umami-event-target="mailto"><span data-email-text>Reveal email address</span></a>
             </p>
           </form>
         </div>
@@ -57,17 +56,20 @@ const socials = [
 
 <script>
   import { buildMailtoHref } from '../lib/contact';
+  import { decodeEmail } from '../lib/email';
 
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
 
   form?.addEventListener('submit', (event) => {
     event.preventDefault();
+    // Human check: ignore script-dispatched submits so bots can't harvest the address.
+    if (!event.isTrusted) return;
 
     // Native validation still applies (required fields, email format).
     if (!form.reportValidity()) return;
 
     const data = new FormData(form);
-    const to = form.dataset.email ?? '';
+    const to = decodeEmail(form.dataset.emailToken ?? '');
     const href = buildMailtoHref(to, {
       name: String(data.get('name') ?? ''),
       email: String(data.get('email') ?? ''),

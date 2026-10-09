@@ -8,9 +8,11 @@ interface Props {
   value?: string;
   icon: IconName;
   color?: string;
+  /** Encoded address from `EMAIL_TOKEN`; `value` is shown until a human click reveals it. */
+  emailToken?: string;
 }
 
-const { href, label, value, icon, color = 'var(--color-link)' } = Astro.props;
+const { href, label, value, icon, color = 'var(--color-link)', emailToken } = Astro.props;
 const isExternal = href.startsWith('http');
 
 // Minimal inline icon set (stroke-based, 24x24).
@@ -33,6 +35,7 @@ const paths: Record<IconName, string> = {
   style={`--sl-color:${color}`}
   data-umami-event="social-click"
   data-umami-event-platform={icon}
+  data-email-token={emailToken}
   {...isExternal ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
 >
   <span class="social-link__icon" aria-hidden="true">
@@ -40,7 +43,7 @@ const paths: Record<IconName, string> = {
   </span>
   <span class="social-link__text">
     <span class="social-link__label">{label}</span>
-    {value && <span class="social-link__value mono">{value}</span>}
+    {value && <span class="social-link__value mono" data-email-text={emailToken ? '' : undefined}>{value}</span>}
   </span>
   <span class="social-link__arrow mono" aria-hidden="true">&rsaquo;</span>
 </a>

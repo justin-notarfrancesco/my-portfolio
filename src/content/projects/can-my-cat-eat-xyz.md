@@ -1,5 +1,5 @@
 ---
-title: "Can My Cat Eat XYZ"
+title: "canmycateat.xyz"
 description: "Type any food and get a straight yes-or-no answer on whether your cat can eat it, with the reasoning. Known cat toxins get fixed, vetted answers; everything else comes from Gemini, cached in Firebase."
 techStack: ["React", "Tailwind CSS", "Gemini API", "Vercel Functions", "Firebase"]
 liveUrl: "https://canmycateat.xyz"
@@ -8,8 +8,9 @@ image: "/projects/can-my-cat-eat-xyz.png"
 lineColor: "orange"
 line: "F"
 year: 2022
-featured: false
-order: 4
+wordmark: "can-my-cat-eat"
+featured: true
+order: 2
 ---
 
 ## Overview

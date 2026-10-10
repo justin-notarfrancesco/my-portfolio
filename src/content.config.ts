@@ -20,6 +20,8 @@ const projects = defineCollection({
     lineColor: z.string().default('blue'),
     /** Two-letter route bullet shown on the card (e.g. "A", "7"). */
     line: z.string().default('•'),
+    /** Render the title as the project's own logo (see src/components/wordmarks/). */
+    wordmark: z.enum(['vouched', 'idle', 'can-my-cat-eat', 'last-stop']).optional(),
     year: z.number().optional(),
     featured: z.boolean().default(false),
     /** Lower sorts first. */

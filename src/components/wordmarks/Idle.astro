@@ -1,0 +1,27 @@
+---
+/**
+ * The Idle wordmark, matching the idle app's header (app/page.tsx): "idle" in
+ * Geist semibold with tight tracking, without the bar mark beside it there.
+ * Geist (SIL OFL 1.1, Vercel) is self-hosted as a Latin-subset variable font
+ * and only ships on pages that render this component.
+ */
+---
+
+<span class="iw">idle</span>
+
+<style is:global>
+  @font-face {
+    font-family: 'Geist';
+    src: url('/fonts/Geist-latin.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+  }
+</style>
+
+<style>
+  .iw {
+    font-family: 'Geist', var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+</style>

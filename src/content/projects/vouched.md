@@ -1,5 +1,5 @@
 ---
-title: "Vouched"
+title: "vouched"
 description: "Find local businesses through the people you know. Every recommendation carries a real name, there are no ads, and nobody can pay to rank higher. Browse by trade or city, or see who a friend vouches for."
 techStack: ["Next.js", "TypeScript", "Server Actions", "Tailwind CSS", "Cloudflare Turnstile", "Vercel"]
 liveUrl: "https://www.vouchedsoftware.com"
@@ -7,8 +7,9 @@ image: "/projects/vouched.png"
 lineColor: "purple"
 line: "7"
 year: 2026
+wordmark: "vouched"
 featured: true
-order: 2
+order: 1
 ---
 
 ## Overview

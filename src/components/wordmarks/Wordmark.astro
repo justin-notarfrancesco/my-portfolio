@@ -1,0 +1,21 @@
+---
+import CanMyCatEat from './CanMyCatEat.astro';
+import Idle from './Idle.astro';
+import LastStop from './LastStop.astro';
+import Vouched from './Vouched.astro';
+
+const wordmarks = {
+  vouched: Vouched,
+  idle: Idle,
+  'can-my-cat-eat': CanMyCatEat,
+  'last-stop': LastStop,
+};
+
+interface Props {
+  name: keyof typeof wordmarks;
+}
+
+const Component = wordmarks[Astro.props.name];
+---
+
+<Component />

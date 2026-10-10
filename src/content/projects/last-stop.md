@@ -1,5 +1,5 @@
 ---
-title: "Last Stop"
+title: "LAST STOP"
 description: "Snake, but you're driving the NYC subway: swipe a 16-bit pixel-art train around a route map, couple on cars as you pick up passengers, and share your crash as a Wordle-style emoji card."
 techStack: ["TypeScript", "HTML Canvas", "Vite"]
 liveUrl: "https://last-stop-five.vercel.app"
@@ -8,8 +8,9 @@ image: "/projects/last-stop.png"
 lineColor: "blue"
 line: "A"
 year: 2026
-featured: true
-order: 3
+wordmark: "last-stop"
+featured: false
+order: 4
 ---
 
 ## Overview

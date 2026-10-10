@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import LineBadge from '../../components/LineBadge.astro';
+import Wordmark from '../../components/wordmarks/Wordmark.astro';
 import { resolveColor } from '../../lib/theme';
 import { PERSON_REF, SITE_URL } from '../../lib/schema';
 
@@ -45,7 +46,7 @@ const schema = {
           <LineBadge label={data.line} size={75} title={`${data.title} line`} eager/>
         </div>
         <div>
-          <h1>{data.title}</h1>
+          <h1>{data.wordmark ? <Wordmark name={data.wordmark} /> : data.title}</h1>
           <p class="detail__desc text-dim">{data.description}</p>
           <div class="detail__meta">
             {data.year && <span class="mono label">{data.year}</span>}

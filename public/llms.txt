@@ -16,15 +16,15 @@ Authority Standards Manual, built with Astro as static HTML.
 
 ## Selected projects
 
-- [Idle](https://notar.nyc/projects/idle): treasury automation for startups with
+- [vouched](https://notar.nyc/projects/vouched): find local businesses through
+  people you know, with real names, no ads, and no paid ranking (Next.js)
+- [canmycateat.xyz](https://notar.nyc/projects/can-my-cat-eat-xyz): a
+  single-purpose cat-nutrition answer engine on the Gemini API
+- [idle](https://notar.nyc/projects/idle): treasury automation for startups with
   T-bill ladders, maker-checker transfer controls, and a to-the-cent ledger
   priced from live U.S. Treasury data (Next.js, TypeScript, property-based tests)
-- [Vouched](https://notar.nyc/projects/vouched): find local businesses through
-  people you know, with real names, no ads, and no paid ranking (Next.js)
-- [Last Stop](https://notar.nyc/projects/last-stop): a daily subway-themed
+- [LAST STOP](https://notar.nyc/projects/last-stop): a daily subway-themed
   arcade game in vanilla TypeScript and canvas
-- [Can My Cat Eat XYZ](https://notar.nyc/projects/can-my-cat-eat-xyz): a
-  single-purpose cat-nutrition answer engine on the Gemini API
 - [notar.nyc](https://notar.nyc/projects/this-site): this site
 
 ## Elsewhere

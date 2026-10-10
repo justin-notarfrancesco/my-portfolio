@@ -34,6 +34,7 @@ const projects = (await getCollection('projects')).sort((a, b) => a.data.order -
               line={p.data.line}
               lineColor={p.data.lineColor}
               year={p.data.year}
+              wordmark={p.data.wordmark}
               eager={i < 3}
             />
           ))

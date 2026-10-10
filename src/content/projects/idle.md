@@ -1,5 +1,5 @@
 ---
-title: "Idle"
+title: "idle"
 description: "Treasury automation for startups: T-bill ladders, maker-checker transfer controls, and a to-the-cent ledger priced from live U.S. Treasury rates, with an interactive demo where every rate is real and every cent is accounted for."
 techStack: ["Next.js", "TypeScript", "Zustand", "Vitest + fast-check", "Playwright"]
 liveUrl: "https://idle-woad.vercel.app"
@@ -8,8 +8,9 @@ image: "/projects/idle.png"
 lineColor: "darkgreen"
 line: "4"
 year: 2026
+wordmark: "idle"
 featured: true
-order: 1
+order: 3
 ---
 
 ## Overview

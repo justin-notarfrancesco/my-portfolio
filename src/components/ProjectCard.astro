@@ -1,5 +1,7 @@
 ---
+import type { CollectionEntry } from 'astro:content';
 import LineBadge from './LineBadge.astro';
+import Wordmark from './wordmarks/Wordmark.astro';
 import { resolveColor } from '../lib/theme';
 
 interface Props {
@@ -11,11 +13,12 @@ interface Props {
   line?: string;
   lineColor?: string;
   year?: number;
+  wordmark?: CollectionEntry<'projects'>['data']['wordmark'];
   /** Eagerly load the roundels — set for above-the-fold cards. */
   eager?: boolean;
 }
 
-const { slug, title, description, techStack, image, line = '•', lineColor = 'blue', year, eager = false } = Astro.props;
+const { slug, title, description, techStack, image, line = '•', lineColor = 'blue', year, wordmark, eager = false } = Astro.props;
 const accent = resolveColor(lineColor);
 const href = `/projects/${slug}`;
 ---
@@ -38,7 +41,7 @@ const href = `/projects/${slug}`;
     <div class="card__head">
       <LineBadge label={line} size={32} title={`${title} line`} eager={eager} />
       <h3 class="card__title">
-        <a class="card__link" href={href} data-umami-event="project-click" data-umami-event-project={slug}>{title}</a>
+        <a class="card__link" href={href} data-umami-event="project-click" data-umami-event-project={slug}>{wordmark ? <Wordmark name={wordmark} /> : title}</a>
       </h3>
       {year && <span class="card__year mono text-dim">{year}</span>}
     </div>

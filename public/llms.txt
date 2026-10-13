@@ -1,9 +1,9 @@
 # Justin Notarfrancesco
 
-> Justin Notarfrancesco is a senior frontend engineer. He has spent five years
-> building financial interfaces at JPMorgan Chase and specializes in design
-> systems, WCAG accessibility, data visualization, and UIs where money math
-> must reconcile to the cent.
+> Justin Notarfrancesco is a frontend engineer at JPMorgan Chase, where he has
+> worked for over five years. He builds search, browse, and detail pages in
+> React and TypeScript, and cares about discovery UX, frontend architecture,
+> fast pages, and readable code. His side projects are built to learn and for fun.
 
 Site: https://notar.nyc, a portfolio styled after the 1970 NYC Transit
 Authority Standards Manual, built with Astro as static HTML.
@@ -20,8 +20,8 @@ Authority Standards Manual, built with Astro as static HTML.
   people you know, with real names, no ads, and no paid ranking (Next.js)
 - [canmycateat.xyz](https://notar.nyc/projects/can-my-cat-eat-xyz): a
   single-purpose cat-nutrition answer engine on the Gemini API
-- [idle](https://notar.nyc/projects/idle): treasury automation for startups with
-  T-bill ladders, maker-checker transfer controls, and a to-the-cent ledger
+- [idle](https://notar.nyc/projects/idle): a demo of treasury software for
+  startups, built to practice money math: T-bill ladders, maker-checker transfer controls, and a to-the-cent ledger
   priced from live U.S. Treasury data (Next.js, TypeScript, property-based tests)
 - [LAST STOP](https://notar.nyc/projects/last-stop): a daily subway-themed
   arcade game in vanilla TypeScript and canvas

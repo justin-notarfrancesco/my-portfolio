@@ -17,43 +17,42 @@ const skillGroups = [
   {
     line: "A",
     title: "Core",
-    skills: ["TypeScript", "JavaScript (ESNext)", "HTML5", "Semantic CSS"],
+    skills: ["TypeScript", "JavaScript", "HTML", "CSS"],
   },
   {
     line: "F",
     title: "Frameworks",
-    skills: ["Astro", "React", "Svelte", "Next.js"],
+    skills: ["React", "Next.js", "Astro", "Tailwind CSS"],
   },
   {
     line: "N",
-    title: "Design & UI",
-    skills: ["Design Systems", "Figma", "Motion", "Data Visualization"],
+    title: "Focus",
+    skills: ["Search and discovery UX", "Frontend architecture", "Web performance", "Design systems"],
   },
   {
     line: "6",
     title: "Quality",
-    skills: ["Accessibility (WCAG)", "Performance", "Testing", "CI/CD"],
+    skills: ["Jest", "Playwright", "Storybook", "Accessibility"],
   },
   {
     line: "L",
     title: "Platform",
-    skills: ["Node.js", "Vite", "Edge Functions", "Web Components"],
+    skills: ["REST APIs", "Vite", "Vercel", "Claude Code"],
   },
 ];
 
-// Recruiter quick-scan: seniority, stack, domain, and working hours.
+// Recruiter quick-scan: experience, stack, focus, and working hours.
 const stats = [
   { value: "5+", label: "Years Experience", line: "3" },
-  { value: "Senior", label: "Frontend Engineer", line: "A" },
   { value: "React + TS", label: "Core Stack", line: "F" },
-  { value: "Millions", label: "Users Served", line: "4" },
+  { value: "Discovery", label: "Favorite Problem", line: "4" },
   { value: "US Eastern", label: "Time Zone", line: "7", express: true },
 ];
 ---
 
 <Layout
   title="About"
-  description="About Justin Notarfrancesco, a senior frontend engineer with five years building financial interfaces at JPMorgan Chase."
+  description="About Justin Notarfrancesco, a frontend engineer at JPMorgan Chase who likes discovery UX, fast pages, and readable code."
   type="profile"
 >
   <script
@@ -75,13 +74,11 @@ const stats = [
       <div class="about">
         <div class="about__bio stack">
           <p class="lede">
-            I&rsquo;m Justin, a senior frontend engineer. For the last five years at JPMorgan Chase, I've built large-scale
-            React applications that millions of users rely on. The edge cases <em
-              >are</em
-            > the job: every error state, every dismissible popover, every
-            interaction instrumented. Along the way, I've led frontend
-            development for major digital experiences and built greenfield
-            platforms from scratch.
+            I&rsquo;m Justin, a frontend engineer at JPMorgan Chase. I build the
+            pages people use to find something and decide on it: browsing,
+            filtering, and the detail page that answers their questions. Five
+            years in, I&rsquo;ve learned that the edge cases <em>are</em> the
+            job.
           </p>
           <p class="text-dim">
             <b>That way of working borrows from Massimo Vignelli&rsquo;s 1970 subway

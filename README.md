@@ -1,6 +1,6 @@
 # 🚇 notar.nyc
 
-**Justin Notarfrancesco — Senior Frontend Engineer, New York City**
+**Justin Notarfrancesco — Frontend Engineer, New York City**
 
 A personal portfolio built as a working demonstration of a design system — not just a place to host a static bio page.
 

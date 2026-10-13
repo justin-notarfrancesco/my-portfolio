@@ -13,7 +13,7 @@ export const PERSON = {
   name: 'Justin Notarfrancesco',
   url: SITE_URL,
   image: `${SITE_URL}/og.png`,
-  jobTitle: 'Senior Frontend Engineer',
+  jobTitle: 'Frontend Engineer',
   worksFor: {
     '@type': 'Organization',
     name: 'JPMorgan Chase',
@@ -29,13 +29,13 @@ export const PERSON = {
   ],
   knowsAbout: [
     'Frontend engineering',
-    'Financial interfaces',
+    'Search and discovery UX',
+    'Frontend architecture',
+    'Web performance',
     'Design systems',
     'TypeScript',
     'React',
-    'Web accessibility (WCAG)',
-    'Data visualization',
-    'Web performance',
+    'Web accessibility',
   ],
 };
 

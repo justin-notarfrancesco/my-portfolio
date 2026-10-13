@@ -1,6 +1,6 @@
 ---
 title: "idle"
-description: "Treasury automation for startups: T-bill ladders, maker-checker transfer controls, and a to-the-cent ledger priced from live U.S. Treasury rates, with an interactive demo where every rate is real and every cent is accounted for."
+description: "A demo of treasury software for startups, built to practice money math: T-bill ladders, maker-checker transfer controls, and a to-the-cent ledger priced from live U.S. Treasury rates. Every rate is real and every cent is accounted for."
 techStack: ["Next.js", "TypeScript", "Zustand", "Vitest + fast-check", "Playwright"]
 liveUrl: "https://idle-woad.vercel.app"
 repoUrl: "https://github.com/justin-notarfrancesco/idle"
@@ -15,12 +15,11 @@ order: 3
 
 ## Overview
 
-I've spent five years building financial UI at JPMorgan Chase, where the money is real
-and the tooling had decades of institutional weight behind it. Idle brings that
-discipline to the other end of the market: idle cash is a silent expense (checking
-earns next to nothing while T-bills pay real yield), so Idle gives startups T-bill
-ladders, maker-checker transfer controls, and a to-the-cent ledger. The site runs an
-interactive demo for a sample company, Meridian Robotics: SOFR, the effective fed
+I built Idle to practice the kind of frontend where every cent has to reconcile. Idle
+cash is a quiet expense (checking earns next to nothing while T-bills pay real yield),
+so the demo imagines treasury software for a startup: T-bill ladders, maker-checker
+transfer controls, and a to-the-cent ledger. It runs for a sample company, Meridian
+Robotics: SOFR, the effective fed
 funds rate, and T-bill auction results stream in live from FRED and Treasury
 FiscalData, while the ledger and bank connection are simulated in the browser.
 

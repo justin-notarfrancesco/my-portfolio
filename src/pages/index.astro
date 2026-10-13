@@ -23,7 +23,7 @@ const schema = {
       url: SITE_URL,
       name: 'Justin Notarfrancesco',
       description:
-        'Portfolio of Justin Notarfrancesco, a senior frontend engineer building financial interfaces at JPMorgan Chase.',
+        'Portfolio of Justin Notarfrancesco, a frontend engineer at JPMorgan Chase who builds search, browse, and detail pages in React and TypeScript.',
       about: { '@id': PERSON['@id'] },
     },
   ],
@@ -42,13 +42,13 @@ const schema = {
     <div class="container hero__grid">
       <div class="hero__intro">
         <h1 class="hero__name">Justin<br />Notarfrancesco</h1>
-        <p class="hero__title label">Senior Frontend Engineer</p>
+        <p class="hero__title label">Frontend Engineer</p>
         <p class="hero__tagline text-dim">
-          Interfaces that move millions of people through their day.
+          Wayfinding for the web.
         </p>
         <p class="hero__subline text-dim">
-          I've spent over five years at JPMorgan Chase building React apps for millions of
-          people. At that scale, speed and reliability aren't features, they're the standard.
+          Over five years at JPMorgan Chase. I make pages easy to browse, and fast by
+          loading less.
         </p>
 
         <div class="hero__actions">
@@ -153,6 +153,7 @@ const schema = {
   .hero__subline {
     font-size: 0.95rem;
     max-width: 46ch;
+    text-wrap: pretty;
     margin-bottom: 1.75rem;
   }
   .hero__actions {

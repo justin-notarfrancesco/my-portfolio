@@ -5,60 +5,84 @@ import LineBadge from '../../components/LineBadge.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+// Plates pair up two to a row; an odd last plate takes the whole row.
+const wide = (i: number) => i === projects.length - 1 && projects.length % 2 === 1;
 ---
 
 <Layout
   title="Work"
   description="Side projects Justin Notarfrancesco built to learn and for fun: search and browse UIs, a to-the-cent money demo, a subway arcade game, and this site."
 >
-  <section class="section">
-    <div class="container">
-      <header class="page-head">
-        <p class="eyebrow"><LineBadge label="G" size={32} eager /> <span class="eyebrow__eta mono">System Map</span></p>
-        <h1>Work</h1>
-        <p class="page-head__lede text-dim">
+  <section class="page">
+    <div class="wrap">
+      <div class="chapter">
+        <span class="chapter__num">1.0</span>
+        <span>Work</span>
+      </div>
+
+      <header class="work__head">
+        <p class="eyebrow"><LineBadge label="W" size={28} eager /> <span class="mono">SYSTEM MAP</span></p>
+        <h1 class="page__title">Work</h1>
+        <p class="page__lede">
           A running line of things I&rsquo;ve designed and built on my own time, to learn and
           for fun. Each stop links to a full write-up
           with the tech, the live site, and the source.
         </p>
       </header>
 
-      <div class="grid cards">
+      <h2 class="sr-only">All projects</h2>
+      <div class="plates">
         {
           projects.map((p, i) => (
-            <ProjectCard
-              slug={p.id}
-              title={p.data.title}
-              description={p.data.description}
-              techStack={p.data.techStack}
-              image={p.data.image}
-              line={p.data.line}
-              lineColor={p.data.lineColor}
-              year={p.data.year}
-              wordmark={p.data.wordmark}
-              eager={i < 3}
-            />
+            <div class:list={['reveal', { 'plates__wide': wide(i) }]}>
+              <ProjectCard
+                slug={p.id}
+                title={p.data.title}
+                description={p.data.description}
+                techStack={p.data.techStack}
+                image={p.data.image}
+                liveUrl={p.data.liveUrl}
+                line={p.data.line}
+                lineColor={p.data.lineColor}
+                year={p.data.year}
+                wordmark={p.data.wordmark}
+                fig={`1.${i + 1}`}
+                eager={i < 2}
+                wide={wide(i)}
+              />
+            </div>
           ))
         }
       </div>
+
+      <p class="folio" aria-hidden="true"><span>1.0 &mdash; Work</span><span>01</span></p>
     </div>
   </section>
 </Layout>
 
 <style>
-  .page-head__lede {
-    font-size: 1.15rem;
+  .work__head {
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+    border-bottom: 2px solid var(--ink);
   }
-  .cards {
-    grid-template-columns: repeat(3, 1fr);
+  .work__head .page__title {
+    margin-top: 1.1rem;
   }
-  @media (max-width: 900px) {
-    .cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .plates {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(3rem, 7vw, 5rem) var(--col-gap);
+    margin-top: clamp(2.5rem, 6vw, 4rem);
   }
-  @media (max-width: 560px) {
-    .cards {
+  .plates > * {
+    min-width: 0;
+  }
+  .plates__wide {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 45em) {
+    .plates {
       grid-template-columns: 1fr;
     }
   }

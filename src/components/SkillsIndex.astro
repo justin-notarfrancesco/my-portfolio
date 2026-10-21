@@ -1,0 +1,121 @@
+---
+import LineBadge from './LineBadge.astro';
+import { skillGroups } from '../lib/profile';
+
+interface Props {
+  /** Chapter number the groups are indexed under, e.g. "5" → 5.1, 5.2 … */
+  chapter: string;
+}
+
+const { chapter } = Astro.props;
+---
+
+<div class="skills">
+  {
+    skillGroups.map((g, i) => (
+      <div class="group reveal">
+        <div class="group__head">
+          <span class="num">{chapter}.{i + 1}</span>
+          <LineBadge label={g.line} size={28} />
+          <h3>{g.title}</h3>
+        </div>
+        <ul>
+          {g.skills.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+    ))
+  }
+  <!-- Fills the sixth cell with the next step, numbered and marked like the
+       groups so its heading shares their baseline and left edge. -->
+  <div class="group group--cta reveal">
+    <div class="group__head">
+      <span class="num">{chapter}.{skillGroups.length + 1}</span>
+      <span class="group__mark" aria-hidden="true">&rarr;</span>
+      <h3>Get in touch</h3>
+    </div>
+    <a class="btn btn--ink" href="/contact" data-umami-event="cta-click" data-umami-event-destination="/contact">Contact <span aria-hidden="true">&rarr;</span></a>
+  </div>
+</div>
+
+<style>
+  /* Sits under a ChapterHead, whose rule closes the top. Six cells (five
+     groups and the contact cell) in explicit tracks that divide the page's
+     columns evenly: 6 × 2 columns, then 3 × 4, then 2 × 6, then one. */
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+  }
+  @media (max-width: 69em) {
+    .skills {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 45em) {
+    .skills {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 30em) {
+    .skills {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .group {
+    padding-block: 1rem 1.4rem;
+    border-bottom: 1px solid var(--hair);
+  }
+  /* Index number above, then badge and title, as in the stats; the title
+     gets the whole cell beside its badge. */
+  .group__head {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    grid-template-areas:
+      'num num'
+      'badge title';
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.75rem;
+  }
+  .group__head .num {
+    grid-area: num;
+  }
+  .group__head h3 {
+    grid-area: title;
+  }
+  .group__head h3 {
+    min-width: 0;
+    font-size: var(--t-body);
+    line-height: 1.15;
+  }
+  /* Badge-sized ink roundel for the contact cell. */
+  .group__mark {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin: 3px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--on-ink);
+    font-size: var(--t-micro);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .group li {
+    padding-block: 0.22rem;
+    padding-left: calc(28px + 0.55rem);
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+  .group--cta .btn {
+    margin-left: calc(28px + 0.55rem);
+    max-width: calc(100% - 28px - 0.55rem);
+    white-space: normal;
+  }
+</style>

@@ -11,34 +11,29 @@ const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
 ---
 
-<header class="nav">
-  <a href="#main" class="skip-link">Skip to content</a>
-  <div class="nav__inner container">
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- Signage band: black, with the thin white stripe across the top of every NYCTA sign. -->
+<header class="band" id="top">
+  <div class="wrap band__inner">
     <a class="brand" href="/" aria-label="Justin Notarfrancesco, home" data-umami-event="nav-click" data-umami-event-destination="/">
-      <img class="brand__bullet" src="/subway/J.svg" alt="" width="48" height="48" />
-      <span class="brand__divider" aria-hidden="true"></span>
+      <img class="brand__bullet" src="/subway/J.svg" alt="" width="40" height="40" />
       <span class="brand__text">
         <span class="brand__name">Justin Notarfrancesco</span>
-        <span class="brand__sub label">Frontend Engineer</span>
       </span>
     </a>
 
-    <input type="checkbox" id="nav-toggle" class="nav__checkbox sr-only" aria-hidden="true" />
-    <label for="nav-toggle" class="nav__burger" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </label>
-
-    <nav class="nav__menu" aria-label="Primary">
-      <ul>
+    <nav aria-label="Primary">
+      <ul class="band__nav">
         {
           links.map((l) => (
             <li>
               {isActive(l.href) ? (
-                <span class="nav__link is-active" aria-current="page">
+                <span class="band__link is-active" aria-current="page">
                   {l.label}
                 </span>
               ) : (
-                <a href={l.href} class="nav__link" data-umami-event="nav-click" data-umami-event-destination={l.href}>
+                <a class="band__link" href={l.href} data-umami-event="nav-click" data-umami-event-destination={l.href}>
                   {l.label}
                 </a>
               )}
@@ -51,191 +46,152 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
 </header>
 
 <style>
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
-    backdrop-filter: saturate(160%) blur(10px);
-    border-bottom: 1px solid var(--color-rule);
-  }
-  .nav__inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-block-size: var(--nav-h);
-  }
-
+  /* Clipped to nothing until focused, rather than parked above the page
+     edge: the overscroll bounce at the top would reveal a parked link, and
+     visibility: hidden would take it out of the tab order. */
   .skip-link {
     position: absolute;
     left: 0.5rem;
     top: 0.5rem;
-    transform: translateY(-150%);
-    background: var(--color-link);
-    color: #000;
+    z-index: 100;
+    background: var(--mta-yellow);
+    color: var(--ink);
     padding: 0.5rem 0.9rem;
-    border-radius: var(--radius);
     font-weight: 700;
-    transition: transform 0.15s ease;
-    z-index: 60;
   }
-  .skip-link:focus {
-    transform: translateY(0);
-    text-decoration: none;
+  .skip-link:not(:focus) {
+    clip-path: inset(50%);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0;
+  }
+
+  .band {
+    background: var(--ink);
+    color: var(--on-ink);
+    border-top: 6px solid var(--ink);
+  }
+  .band::before {
+    content: '';
+    position: absolute;
+    inset: 4px 0 auto;
+    height: 2px;
+    background: var(--on-ink);
+  }
+  /* The brand always sits centered in a band-height row, whether the nav
+     shares that row (wide) or drops to its own row below (narrow), so the
+     name never shifts when the layout switches. */
+  .band__inner {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .band :focus-visible {
+    outline-color: var(--mta-yellow);
+    outline-offset: -3px;
   }
 
   .brand {
+    min-width: 0;
     display: inline-flex;
     align-items: center;
-    gap: 0.7rem;
-    color: var(--color-text);
-    text-decoration: none;
-    border-radius: var(--radius);
-  }
-  .brand:hover {
-    text-decoration: none;
+    gap: 0.8rem;
+    min-height: var(--band-h);
   }
   .brand__bullet {
-    display: block;
-    inline-size: 40px;
-    block-size: 40px;
     flex: none;
-    transition:
-      transform 0.15s ease,
+    transition: transform 0.15s ease;
   }
-  .brand:hover .brand__bullet {
-    transform: scale(1.06);
-    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--mta-brown) 70%, transparent));
+  @media (hover: hover) {
+    .brand:hover .brand__bullet {
+      transform: scale(1.06);
+    }
   }
-  .brand:active .brand__bullet {
-    transform: scale(0.98);
-  }
-
-  /* Station-signage divider between the route bullet and the name */
-  .brand__divider {
-    inline-size: 1px;
-    block-size: 28px;
-    background: var(--color-rule);
-    flex: none;
-  }
-
   .brand__text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    line-height: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    display: grid;
+    line-height: 1.15;
   }
   .brand__name {
-    font-weight: 800;
-    font-size: 1.05rem;
-    letter-spacing: 0;
-    white-space: nowrap;
-  }
-  .brand__sub {
-    color: var(--color-text-dim);
-    font-size: 0.6rem;
-    letter-spacing: 0.16em;
-    transition: color 0.15s ease;
-  }
-  .brand:hover .brand__sub {
-    color: var(--color-text);
+    font-weight: 700;
+    font-size: var(--t-body);
+    letter-spacing: 0.005em;
   }
 
-  .nav__menu ul {
+  /* Links run the full height of the band, so the selection bar sits on the
+     band's bottom edge. The last link's text ends flush with the content
+     edge: the list hangs its padding into the gutter. */
+  .band nav {
+    min-width: 0;
+  }
+  /* Wraps only when the reader enlarges text far enough that four links
+     can't share a row; at default sizes the breakpoint below prevents it. */
+  .band__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.25rem;
+    list-style: none;
+    margin: 0 -0.8rem 0 0;
+    padding: 0;
+    height: 100%;
+  }
+  .band__link {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .nav__link {
-    display: inline-block;
-    padding: 0.5rem 0.85rem;
-    color: var(--color-text);
+    height: 100%;
+    min-height: 44px;
+    padding: 3px 0.8rem 0;
     font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 0.02em;
-    border-radius: var(--radius);
+    font-size: var(--t-small);
+    /* One selection metaphor: a bar along the bottom. Hover previews it in
+       grey; the current page holds it in yellow. A real border, so it
+       survives forced-colors mode. */
     border-bottom: 3px solid transparent;
-    text-decoration: none;
+    transition: border-color 0.15s ease;
   }
-  .nav__link:hover {
-    color: var(--color-link);
-    text-decoration: none;
+  @media (hover: hover) {
+    a.band__link:hover {
+      border-bottom-color: var(--band-dim);
+    }
   }
-  .nav__link.is-active {
-    border-bottom-color: var(--color-primary);
-    color: #fff;
+  a.band__link:active {
+    border-bottom-color: var(--on-ink);
+  }
+  .band__link.is-active {
+    border-bottom-color: var(--mta-yellow);
   }
 
-  /* --- Mobile menu (CSS-only, no JS) --- */
-  .nav__checkbox {
-    position: absolute;
-  }
-  .nav__burger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 44px;
-    height: 44px;
-    padding: 10px;
-    cursor: pointer;
-    border-radius: var(--radius);
-  }
-  .nav__burger span {
-    display: block;
-    height: 2px;
-    width: 100%;
-    background: var(--color-text);
-    transition: transform 0.15s ease, opacity 0.15s ease;
-  }
-  .nav__checkbox:focus-visible + .nav__burger {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
-  }
-
-  @media (max-width: 720px) {
-    .nav__burger {
-      display: flex;
-    }
-    .nav__menu {
-      position: absolute;
-      inset: var(--nav-h) 0 auto 0;
-      background: var(--color-bg);
-      border-bottom: 1px solid var(--color-rule);
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.25s ease;
-    }
-    .nav__menu ul {
+  /* One deliberate breakpoint, set above the width where the links would
+     otherwise start wrapping on their own (~605px at default text size).
+     In em, so it also trips when the reader enlarges text. */
+  @media (max-width: 40em) {
+    .band__inner {
       flex-direction: column;
       align-items: stretch;
       gap: 0;
-      overflow: hidden;
-      padding-inline: var(--gutter);
     }
-    .nav__menu li {
-      border-bottom: 1px solid var(--color-rule);
+    /* Same space above the bullet as the one-row band (so the name doesn't
+       move at this breakpoint), but only a little below it before the
+       menu's divider. The 40px is the bullet's size. */
+    .brand {
+      align-self: flex-start;
+      min-height: 0;
+      padding-block: calc((var(--band-h) - 40px) / 2) 0.65rem;
     }
-    .nav__link {
-      display: block;
-      padding: 1rem 0.25rem;
-      border-bottom: 3px solid transparent;
+    .band nav {
+      border-top: 1px solid var(--band-rule);
     }
-    .nav__checkbox:checked ~ .nav__menu {
-      grid-template-rows: 1fr;
+    .band__nav {
+      justify-content: space-between;
+      margin-inline: -0.55rem;
     }
-    .nav__checkbox:checked + .nav__burger span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
-    }
-    .nav__checkbox:checked + .nav__burger span:nth-child(2) {
-      opacity: 0;
-    }
-    .nav__checkbox:checked + .nav__burger span:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
+    .band__link {
+      min-height: 48px;
+      padding-inline: 0.55rem;
     }
   }
 </style>

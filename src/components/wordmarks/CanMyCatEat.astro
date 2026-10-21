@@ -2,12 +2,16 @@
 /**
  * The canmycateat.xyz wordmark, matching that app's heading and logo
  * (src/pages/Home.js, src/components/Logo.js): bold in the platform system face.
+ * If it must wrap (very large text), it breaks only before the TLD.
  */
 ---
 
-<span class="cw">canmycateat.xyz</span>
+<span class="cw"><span>canmycateat</span><wbr /><span>.xyz</span></span>
 
 <style>
+  .cw span {
+    white-space: nowrap;
+  }
   .cw {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
       'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;

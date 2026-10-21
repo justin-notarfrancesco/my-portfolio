@@ -1,8 +1,9 @@
 /* ==========================================================================
    Justin Notarfrancesco — Portfolio
-   NYC Subway wayfinding design system
+   NYCTA Graphics Standards Manual design system
    --------------------------------------------------------------------------
-   Single source of theme truth. Retune the palette / type here.
+   Off-white paper, black type, a visible 12-column construction grid, black
+   signage bands, and numbered chapters. Single source of theme truth.
    ========================================================================== */
 
 :root {
@@ -17,31 +18,53 @@
   --mta-darkgreen: #00933c; /* 4 5 6 */
   --mta-purple: #b933ad; /* 7 */
 
-  /* --- Surfaces --- */
-  --color-bg: #0a0a0a;
-  --color-surface: #141414;
-  --color-surface-2: #1c1c1c;
-  --color-rule: #2a2a2a; /* hairline rules, station-signage dividers */
-  --color-text: #f5f5f5;
-  --color-text-dim: #a7a9ac; /* the L line grey, doubles as muted text */
+  /* --- Paper and ink --- */
+  --paper: #f4f1ea;
+  --paper-2: #ebe7dd;
+  --ink: #111111;
+  --ink-2: #2b2a27;
+  --dim: #5c5850;
+  --hair: #cfc9bc;
+  --guide: rgba(185, 51, 50, 0.07); /* red construction lines, printed faintly */
+  --band-dim: #bdb8ad; /* secondary text on the black bands */
+  --band-rule: #3a3935; /* hairlines on the black bands */
+  --on-ink: #ffffff; /* type reversed out of ink */
+  --field: #ffffff; /* form fields and cards: white stock on paper */
 
-  /* --- Semantic roles, mapped to lines --- */
-  --color-primary: var(--mta-blue); /* navigation + primary actions (A/C/E) */
-  --color-primary-ink: #ffffff;
-  --color-link: var(--mta-yellow); /* links + hover states (N/Q/R/W) */
-  --color-accent: var(--mta-orange); /* arrival board / secondary accent (B/D/F/M) */
+  /* --- Semantic roles (shared components read these) --- */
+  --color-rule: var(--hair);
+  --color-link: var(--ink);
 
   /* --- Type --- */
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+  /* Four steps for running text and labels; display sizes stay local. */
+  --t-micro: 0.75rem; /* 12px: mono labels, folios, captions, decimals */
+  --t-small: 0.875rem; /* 14px: metadata, stack lists, buttons */
+  --t-body: 1.0625rem; /* 17px: body copy and every description */
+  --t-lede: clamp(1.2rem, 1.9vw, 1.45rem);
+  /* Tracking: caps set in sans get 0.12em; mono is already evenly spaced. */
+  --track-caps: 0.12em;
+  --track-mono: 0.04em;
 
   /* --- Layout --- */
-  --maxw: 1120px;
-  --gutter: clamp(1.25rem, 5vw, 3rem);
-  --radius: 4px;
-  --nav-h: 64px;
+  --maxw: 1240px;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --col-gap: clamp(0.75rem, 1.8vw, 1.5rem);
+  --radius: 3px;
+  --band-h: 76px;
+  --cap-gap: 1.25rem; /* figure to caption */
+  --plate-shadow: 8px; /* hard offset shadow on every figure plate */
+  --ctl-h: 3.125rem; /* 50px: one height for buttons and form fields */
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 
-  --focus: var(--mta-yellow);
+  --focus: var(--mta-blue);
+  color-scheme: light;
+}
+@media (max-width: 45em) {
+  :root {
+    --plate-shadow: 5px;
+  }
 }
 
 *,
@@ -53,7 +76,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--nav-h) + 1rem);
+  scroll-padding-top: 4rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -72,77 +95,56 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-sans);
-  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
-  line-height: 1.6;
+  font-size: var(--t-body);
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
 }
 
-/* --- Headings: bold Helvetica, station-name weight --- */
 h1,
 h2,
 h3,
 h4 {
   font-weight: 700;
   line-height: 1.04;
-  margin: 0 0 0.5em;
+  margin: 0;
   text-wrap: balance;
 }
 
-h1 {
-  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
-}
-
-h2 {
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-}
-
-h3 {
-  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
-}
-
-p {
-  margin: 0 0 1rem;
-}
-
-p:last-child {
-  margin-bottom: 0;
+p,
+figure,
+dl,
+dd {
+  margin: 0;
 }
 
 img {
   display: block;
+  max-width: 100%;
 }
 
-/* --- Links --- */
 a {
-  color: var(--color-link);
+  color: inherit;
   text-decoration: none;
-  transition: color 0.15s ease;
 }
 
-a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 2px;
-}
-
-/* --- Focus: subway-yellow, never removed --- */
-:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
+code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.05em 0.3em;
+  background: var(--paper-2);
+  border: 1px solid var(--hair);
   border-radius: 2px;
 }
 
-/* --- Uppercase station-signage labels --- */
-.label {
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-weight: 700;
-  font-size: 0.75rem;
-  line-height: 1;
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .mono {
@@ -150,24 +152,8 @@ a:hover {
   font-variant-numeric: tabular-nums;
 }
 
-/* --- Layout helpers --- */
-.container {
-  width: 100%;
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
-.section {
-  padding-block: clamp(3.5rem, 8vw, 6.5rem);
-}
-
-.stack > * + * {
-  margin-top: 1rem;
-}
-
 .text-dim {
-  color: var(--color-text-dim);
+  color: var(--dim);
 }
 
 .sr-only {
@@ -182,94 +168,354 @@ a:hover {
   border: 0;
 }
 
-/* --- Hairline rule, subway-signage style --- */
-.rule {
-  border: 0;
-  border-top: 1px solid var(--color-rule);
-  margin: 0;
+/* --- Grid --------------------------------------------------------------- */
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-.page-head {
-  margin-bottom: 2.5rem;
+.g12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
 }
 
-/* --- Section eyebrow: bullet + uppercase label + trailing line --- */
+/* 12-column construction grid, printed faintly under every page. */
+.guides {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.guides .wrap {
+  height: 100%;
+}
+.guides i {
+  border-inline: 1px solid var(--guide);
+}
+@media (max-width: 45em) {
+  .guides .g12 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .guides i:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+/* --- Chapters, captions, folios ----------------------------------------- */
+.chapter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding-block: 0.7rem;
+  min-height: 2.875rem;
+  border-bottom: 2px solid var(--ink);
+  font-size: var(--t-micro);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  font-weight: 700;
+}
+/* Every decimal label (1.0, 3.1, 3.1.2, 5.4 …) is set one way. */
+.chapter__num,
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: var(--t-micro);
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
 .eyebrow {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--color-text-dim);
+  gap: 0.6rem;
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-mono);
+  font-weight: 700;
+  color: var(--dim);
 }
 
-.eyebrow::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--color-rule);
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  margin-top: var(--cap-gap);
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--hair);
+  font-size: var(--t-small);
+  color: var(--dim);
+}
+.caption .mono {
+  flex: none;
+  white-space: nowrap;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: var(--t-micro);
+}
+.caption__host {
+  margin-left: auto;
+  font-weight: 400 !important;
+  color: var(--dim) !important;
 }
 
-/* --- Buttons --- */
+.folio {
+  display: flex;
+  justify-content: space-between;
+  margin-top: clamp(2.5rem, 5vw, 3rem);
+  padding-block: 0.6rem 1.5rem;
+  border-top: 1px solid var(--hair);
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-mono);
+  color: var(--dim);
+}
+
+.kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--ink);
+  font-size: var(--t-micro);
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+.kicker .mono {
+  letter-spacing: 0;
+}
+
+/* Small caps label (Stack, Year, Get in touch …). */
+.label {
+  font-size: var(--t-micro);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  font-weight: 700;
+  color: var(--dim);
+}
+
+/* Page title block shared by inner pages: chapter rule, then a big title. */
+.page {
+  padding-top: clamp(1.25rem, 3vw, 2rem);
+}
+.page__title {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(min(2.35rem, 11vw), 7.4vw, 6.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+}
+.page__lede,
+.lede {
+  max-width: 34em;
+  font-size: var(--t-lede);
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+.page__lede {
+  margin-top: 1.5rem;
+  color: var(--ink-2);
+}
+/* A ChapterHead opens each section and draws its own rule, so the section
+   needs only the space above it. */
+.page__section {
+  margin-top: clamp(3.5rem, 8vw, 6rem);
+}
+
+/* --- Buttons ------------------------------------------------------------ */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.4rem;
-  font-family: inherit;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: var(--ctl-h);
+  padding: 0 1.2rem;
+  font: inherit;
   font-weight: 700;
-  font-size: 0.9375rem;
-  letter-spacing: 0.02em;
+  font-size: var(--t-small);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--ink);
   border-radius: var(--radius);
-  border: 2px solid transparent;
+  white-space: nowrap;
   cursor: pointer;
+  text-decoration: none;
   transition:
-    transform 0.12s ease,
     background 0.15s ease,
     color 0.15s ease,
-    border-color 0.15s ease;
-  text-decoration: none;
+    transform 0.15s var(--ease),
+    box-shadow 0.15s ease;
 }
-
-.btn:hover {
-  text-decoration: none;
-  transform: translateY(-2px);
+.btn--ink {
+  background: var(--ink);
+  color: var(--on-ink);
 }
-
-.btn--primary {
-  background: var(--color-primary);
-  color: var(--color-primary-ink);
+.btn--text {
+  justify-content: flex-start;
+  border-color: transparent;
+  padding-inline: 0;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
-
-.btn--primary:hover {
-  background: #0048d0;
-}
-
-.btn--ghost {
-  background: transparent;
-  color: var(--color-text);
-  border-color: var(--color-rule);
-}
-
-.btn--ghost:hover {
-  border-color: var(--color-link);
-  color: var(--color-link);
-}
-
-/* --- Grid utility --- */
-.grid {
-  display: grid;
-  gap: clamp(1rem, 3vw, 2rem);
-}
-
-.eyebrow__eta {
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
-  animation: blink 2s steps(1) infinite;
-  text-transform: uppercase;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0.5;
+/* Hover lifts only on devices that hover, so a tap never leaves a button stuck. */
+@media (hover: hover) {
+  .btn--ink:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--accent, var(--mta-yellow));
   }
+  .btn--line:hover {
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+  .btn--text:hover {
+    text-decoration-thickness: 3px;
+    text-decoration-color: var(--accent, var(--ink));
+  }
+}
+.btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+.btn--text:active {
+  transform: none;
+}
+
+/* Inline text link: underlined, thickens on hover. */
+.link {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+.link:hover {
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--accent, var(--ink));
+}
+
+/* Hyphenate narrow measures so the rag doesn't gape. */
+@media (max-width: 30em) {
+  .prose p,
+  .prose li,
+  .built li,
+  .lede,
+  .page__lede {
+    hyphens: auto;
+  }
+}
+
+/* --- Scroll reveal (Layout's script adds .is-in; content in view on load
+       is shown immediately, and nothing hides without JS) ------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s var(--ease),
+      transform 0.7s var(--ease);
+  }
+  .js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Print / Save as PDF (portfolios get attached to applications) ------- */
+@media print {
+  /* Keep the signage bands, ink buttons, and line colors even when the
+     browser's "background graphics" option is off; otherwise the white type
+     on the black bands prints invisible. */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Screen-only chrome: the construction grid and the fixed contact bar
+     would repeat on every printed page. */
+  .guides,
+  .dock,
+  .skip-link,
+  .subway,
+  .band nav,
+  .hero__cta,
+  .reach,
+  .onward__contact,
+  astro-dev-toolbar {
+    display: none !important;
+  }
+  /* Sections that never scrolled into view would otherwise print blank, and
+     route stripes that draw in on reveal would print undrawn. */
+  .reveal,
+  .reveal::after,
+  .chead {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  /* Outbound links print their address, since paper can't be clicked. */
+  .spread__actions a[href^='http']::after,
+  .detail__actions a[href^='http']::after {
+    content: ' ' attr(href);
+    font-weight: 400;
+    font-family: var(--font-mono);
+    font-size: var(--t-micro);
+  }
+  /* Keep figures, spreads' headers, and list rows from splitting across pages. */
+  figure,
+  .row,
+  .group,
+  .plate,
+  .stat,
+  .built li,
+  .prose li {
+    break-inside: avoid;
+  }
+  h2,
+  h3,
+  .kicker,
+  .chapter,
+  .spread__bar,
+  .detail__bar {
+    break-after: avoid;
+  }
+}
+
+/* --- Dotted inline lists (tech stacks) ------------------------------------
+   Markup: <… class="dots"><ul><li>…</li></ul></…>. Each item leads with its
+   separator dot, and the list is pulled left by one dot's width inside a
+   clipping box, so a dot that would start a line is clipped away: no line
+   ever begins or ends with a dangling "·". Each item is a flex item, so it
+   moves to the next line whole; only a name wider than the whole column
+   (very large text) wraps inside itself. */
+.dots {
+  overflow: hidden;
+}
+.dots ul {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.15rem;
+  list-style: none;
+  margin: 0 0 0 -1em;
+  padding: 0;
+}
+.dots li {
+  position: relative;
+  min-width: 0;
+  padding-left: 1em;
+}
+.dots li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  width: 1em;
+  text-align: center;
+  color: var(--dim);
 }

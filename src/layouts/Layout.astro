@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import ContactDock from '../components/ContactDock.astro';
 
 interface Props {
   title?: string;
@@ -11,6 +12,8 @@ interface Props {
   imageAlt?: string;
   /** Open Graph object type: 'profile' for about, 'article' for project pages. */
   type?: 'website' | 'profile' | 'article';
+  /** id the contact bar appears below once scrolled past; defaults to the nav band. */
+  dockSentinel?: string;
 }
 
 const {
@@ -19,6 +22,7 @@ const {
   image = '/og.png',
   imageAlt = 'Justin Notarfrancesco, Frontend Engineer. Subway-style sign with N, A, B, and 6 line bullets.',
   type = 'website',
+  dockSentinel,
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://notar.nyc');
@@ -38,7 +42,7 @@ const fullTitle = title.includes('Notarfrancesco') ? title : `${title} | Justin 
     <link rel="icon" type="image/svg+xml" href="/subway/J.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#111111" />
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -62,6 +66,7 @@ const fullTitle = title.includes('Notarfrancesco') ? title : `${title} | Justin 
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:image:alt" content={imageAlt} />
 
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <slot name="head" />
 
     {
@@ -76,10 +81,54 @@ const fullTitle = title.includes('Notarfrancesco') ? title : `${title} | Justin 
     }
   </head>
   <body>
+    <!-- 12-column construction grid, printed faintly under everything -->
+    <div class="guides" aria-hidden="true">
+      <div class="wrap g12">{Array.from({ length: 12 }, () => <i></i>)}</div>
+    </div>
     <Nav />
+    <ContactDock sentinel={dockSentinel} />
     <main id="main">
       <slot />
     </main>
     <Footer />
   </body>
 </html>
+
+<script>
+  // Scroll reveal. Anything already in view on load shows at once, so a first
+  // impression never waits on animation; reduced motion skips it entirely.
+  const items = document.querySelectorAll<HTMLElement>('.reveal');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) {
+    items.forEach((el) => el.classList.add('is-in'));
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-in');
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+    );
+    items.forEach((el) => {
+      if (el.getBoundingClientRect().top < window.innerHeight) {
+        el.style.transition = 'none';
+        el.classList.add('is-in');
+      } else {
+        io.observe(el);
+      }
+    });
+  }
+</script>
+
+<style>
+  main,
+  :global(.band),
+  :global(.foot) {
+    position: relative;
+    z-index: 1;
+  }
+</style>

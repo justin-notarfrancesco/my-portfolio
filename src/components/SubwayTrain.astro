@@ -4,8 +4,8 @@
  * rides the OUTSIDE edge of its containing box. It cruises at a steady clip,
  * then brakes, dwells, and pulls away at four stations marked by subway-map
  * style station markers sitting on the frame as if it were a route line.
- * Interior lights flick on while it dwells, and the lead cab throws a
- * headlight glow down the line.
+ * Interior lights flick on while it dwells. It makes one full circuit and
+ * parks at the first station, so nothing keeps moving beside the page.
  *
  * Each car is its own element on the shared offset path, trailing the one
  * ahead by a fixed distance, so the consist articulates around corners like
@@ -31,16 +31,16 @@ const cars = [
   <!-- map-style station stops marking the four stations (same path as the
        train).
 
-       Why 11.75% and not 12.5%: offset-distance percentages measure arc
-       length around the rounded border-box path, whose 0% point is where the
-       top edge begins — just past the top-left corner arc, not at the
-       corner — and whose arcs are shorter than sharp corners. On this square
-       frame that puts the top edge's midpoint at ~11.75%, with the other
-       side midpoints exactly 25% apart from it. -->
-  <i class="subway__stop" style="offset-distance: 11.75%"></i>
-  <i class="subway__stop subway__stop--vertical" style="offset-distance: 36.75%"></i>
-  <i class="subway__stop" style="offset-distance: 61.75%"></i>
-  <i class="subway__stop subway__stop--vertical" style="offset-distance: 86.75%"></i>
+       Why 12.3% and not 12.5%: offset-distance percentages measure arc
+       length around the border-box path, whose 0% point is where the top
+       edge begins — just past the top-left corner arc, not at the corner.
+       With the frame's 3px radius that puts the top edge's midpoint at
+       12.2–12.35% for every frame size from 220px to 400px (under 1px
+       off), with the other side midpoints exactly 25% apart from it. -->
+  <i class="subway__stop" style="offset-distance: 12.3%"></i>
+  <i class="subway__stop subway__stop--vertical" style="offset-distance: 37.3%"></i>
+  <i class="subway__stop" style="offset-distance: 62.3%"></i>
+  <i class="subway__stop subway__stop--vertical" style="offset-distance: 87.3%"></i>
 
   {
     cars.map(({ offset, role }) => (
@@ -89,9 +89,8 @@ const cars = [
     inset: 0;
     pointer-events: none;
     z-index: 2;
-    /* Rounds the offset path (coord-box paths follow border-radius), so the
-       train sweeps around corners instead of pivoting 90° on the spot. */
-    border-radius: 12px;
+    /* Matches the frame's corner (coord-box paths follow border-radius). */
+    border-radius: var(--radius);
     /* Without offset-path support the cars would sit static and unrotated
        on the frame's corner — show nothing instead. */
     display: none;
@@ -119,7 +118,7 @@ const cars = [
     /* White fill stays fixed like the train's livery, but the ring picks up
        the same hairline color as the profile frame's border so the marker
        reads as part of the same UI, not a separate map layer. */
-    background: #f4f4f2;
+    background: var(--field);
     border: 2px solid var(--color-rule);
     offset-path: border-box;
     offset-rotate: 0deg;
@@ -141,13 +140,22 @@ const cars = [
        loop, so distances past either end wrap around. */
     offset-path: border-box;
     offset-rotate: auto;
-    offset-distance: calc(11.75% + var(--car-offset)); /* reduced-motion park */
+    offset-distance: calc(12.3% + var(--car-offset)); /* parked at station 1 */
     /* Push the car just outside the border (negative = outward). The
        18px-tall car is centered on the path; -10px puts its wheels ~1px
        outside the frame. */
     transform: translateY(-10px);
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
-    animation: subway-ride 20s infinite;
+    /* One full circuit, entered at station 1's departure (16% of the cycle,
+       hence the -3.2s delay) and run for 1.16 cycles so it also ends at 16%,
+       halted at station 1, exactly where the parked base position puts the
+       cars. Ending at 100% instead would snap the train from the top-left
+       corner back to station 1 when the animation finishes. */
+    animation: subway-ride 20s -3.2s 1.16;
+  }
+  /* Hovering the portrait holds the train where it is. */
+  :global(.hero__media:hover) .subway__car,
+  :global(.hero__media:hover) .subway__win {
+    animation-play-state: paused;
   }
 
   .subway__car svg {
@@ -156,20 +164,8 @@ const cars = [
     overflow: visible;
   }
 
-  /* Headlight glow thrown ahead of the lead cab. */
-  .subway__car--lead::after {
-    content: '';
-    position: absolute;
-    left: 100%;
-    top: 50%;
-    width: 28px;
-    height: 14px;
-    transform: translateY(-50%);
-    background: radial-gradient(farthest-side at 0% 50%, rgba(253, 230, 138, 0.45), transparent);
-  }
-
   .subway__win {
-    animation: subway-doors 20s infinite;
+    animation: subway-doors 20s -3.2s 1.16;
   }
 
   /* Steady cruise (linear) between stations; ease-out to brake into each
@@ -178,20 +174,20 @@ const cars = [
   @keyframes subway-ride {
     0%   { offset-distance: calc(0% + var(--car-offset));    animation-timing-function: linear; }
     5%   { offset-distance: calc(8% + var(--car-offset));    animation-timing-function: ease-out; }  /* brake */
-    11%  { offset-distance: calc(11.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 1 */
-    16%  { offset-distance: calc(11.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
+    11%  { offset-distance: calc(12.3% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 1 */
+    16%  { offset-distance: calc(12.3% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     22%  { offset-distance: calc(20% + var(--car-offset));   animation-timing-function: linear; }
     30%  { offset-distance: calc(33% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
-    36%  { offset-distance: calc(36.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 2 */
-    41%  { offset-distance: calc(36.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
+    36%  { offset-distance: calc(37.3% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 2 */
+    41%  { offset-distance: calc(37.3% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     47%  { offset-distance: calc(45% + var(--car-offset));   animation-timing-function: linear; }
     55%  { offset-distance: calc(58% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
-    61%  { offset-distance: calc(61.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 3 */
-    66%  { offset-distance: calc(61.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
+    61%  { offset-distance: calc(62.3% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 3 */
+    66%  { offset-distance: calc(62.3% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     72%  { offset-distance: calc(70% + var(--car-offset));   animation-timing-function: linear; }
     80%  { offset-distance: calc(83% + var(--car-offset));   animation-timing-function: ease-out; }  /* brake */
-    86%  { offset-distance: calc(86.75% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 4 */
-    91%  { offset-distance: calc(86.75% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
+    86%  { offset-distance: calc(87.3% + var(--car-offset)); animation-timing-function: linear; }   /* STOP 4 */
+    91%  { offset-distance: calc(87.3% + var(--car-offset)); animation-timing-function: ease-in; }  /* depart */
     97%  { offset-distance: calc(95% + var(--car-offset));   animation-timing-function: linear; }
     100% { offset-distance: calc(100% + var(--car-offset)); }
   }

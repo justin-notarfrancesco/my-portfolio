@@ -38,6 +38,25 @@ is the answer.
   and the ASPCA Poison Control number under every answer, full terms and privacy pages,
   and analytics that load only after cookie consent.
 
+## Key decisions
+
+[//]: # "Hidden until you write something here: add a few short paragraphs or bullets. These [//] lines never render. Prompts:"
+[//]: # "Why fixed, vetted answers for known toxins before the model is ever asked."
+[//]: # "Why a constrained yes/no-first prompt, and how you tested that it holds."
+[//]: # "Why a Firebase cache with a timeout, written only from the server."
+[//]: # "Why every food gets its own shareable URL."
+
+## What was hard
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "Where Gemini's answers went wrong, and how you caught it."
+[//]: # "Getting the AI safety guardrails (disclaimer, ASPCA number, consent-gated analytics) right without burying the answer."
+
 ## Outcome
 
 Live and free to use: ask it about grapes before your cat finds out the hard way.
+
+## What I'd change
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "What you'd change about the AI pipeline, or how you'd evaluate answer quality at scale."

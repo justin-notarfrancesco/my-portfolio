@@ -4,7 +4,8 @@ interface Props {
   label: string | number;
   /** Diameter in px. */
   size?: number;
-  /** Accessible label; falls back to the visible text. */
+  /** Accessible label. Omit it when the badge sits beside text that already
+   * names it (the usual case): the badge is then decorative and silent. */
   title?: string;
   /** Eagerly load the roundel — set for above-the-fold badges. */
   eager?: boolean;
@@ -28,7 +29,7 @@ const key = String(label).trim().toUpperCase();
 const isRoute = SUBWAY_LINES.has(key);
 const isExpress = express && EXPRESS_LINES.has(key);
 const src = `/subway/${key}${isExpress ? '-exp' : ''}.svg`;
-const alt = title ?? (isRoute ? `${key}${isExpress ? ' express' : ''} train` : `Line ${label}`);
+const alt = title ?? '';
 
 const fontSize = Math.round(size * 0.46);
 /** MTA bullet SVGs draw the disc at r=28.563 inside a 74.9px box (≈0.763 of the
@@ -53,8 +54,7 @@ const disc = Math.round(size * 0.763);
     <span
       class:list={['line-badge', cls]}
       style={`--badge-size:${size}px;--badge-disc:${disc}px;--badge-font:${fontSize}px;`}
-      role="img"
-      aria-label={alt}
+      {...(alt ? { role: 'img', 'aria-label': alt } : { 'aria-hidden': 'true' })}
     >
       <span class="line-badge__disc" aria-hidden="true">{label}</span>
     </span>

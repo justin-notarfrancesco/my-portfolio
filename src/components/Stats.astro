@@ -1,0 +1,119 @@
+---
+import LineBadge from './LineBadge.astro';
+import { stats } from '../lib/profile';
+
+interface Props {
+  /** Chapter number the stats are indexed under, e.g. "2" → 2.1, 2.2 … */
+  chapter: string;
+}
+
+const { chapter } = Astro.props;
+---
+
+<ul class="stats reveal">
+  {
+    stats.map((s, i) => (
+      <li class="stat">
+        <span class="stat__idx num">{chapter}.{i + 1}</span>
+        <LineBadge label={s.line} size={28} />
+        <span class="stat__value">{s.value}</span>
+        <span class="stat__label">{s.label}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .stats {
+    list-style: none;
+    margin: 2.25rem 0 0;
+    padding: 0;
+    display: grid;
+    /* Four stats of three columns each: the dividers fall in the page's
+       gutters, and every stat's text starts on a column line. */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    border-block: 2px solid var(--ink);
+  }
+  /* Each stat spans three rows of the list's grid and adopts them as a
+     subgrid, so the index, value, and label rows line up across stats even
+     when one value wraps to two lines. */
+  .stat {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'idx idx'
+      'badge value'
+      'label label';
+    gap: 0.55rem;
+    align-items: center;
+    position: relative;
+    padding-block: 0.9rem 1.1rem;
+  }
+  .stat__idx,
+  .stat__label {
+    align-self: start;
+  }
+  .stat + .stat::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: calc(var(--col-gap) / -2);
+    border-left: 1px solid var(--hair);
+  }
+  .stat__idx {
+    grid-area: idx;
+  }
+  .stat :global(.line-badge) {
+    grid-area: badge;
+  }
+  .stat__value {
+    grid-area: value;
+    font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+    font-weight: 700;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .stat__label {
+    grid-area: label;
+    font-size: var(--t-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--track-caps);
+    font-weight: 700;
+    color: var(--dim);
+  }
+
+  @media (max-width: 62.5em) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    /* The first stat of each row has no divider. `.stat + .stat` so this
+       outranks the divider rule above; plain `.stat:nth-child(3)` lost. */
+    .stat + .stat:nth-child(odd)::before {
+      content: none;
+    }
+    .stat:nth-child(n + 3) {
+      border-top: 1px solid var(--hair);
+    }
+  }
+  /* Labels like EXPERIENCE can't shrink, so when they no longer fit two up
+     (narrow phones, or large reader text), the stats go one per row. */
+  @media (max-width: 22em) {
+    .stats {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .stat + .stat::before {
+      content: none;
+    }
+    .stat + .stat {
+      border-top: 1px solid var(--hair);
+    }
+  }
+  .stat__label,
+  .stat__value {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+</style>

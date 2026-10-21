@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import LineBadge from './LineBadge.astro';
 import Wordmark from './wordmarks/Wordmark.astro';
 import { resolveColor } from '../lib/theme';
+import { host, smart } from '../lib/project-sections';
 
 interface Props {
   slug: string;
@@ -10,162 +11,198 @@ interface Props {
   description: string;
   techStack: string[];
   image?: string;
+  liveUrl?: string;
   line?: string;
   lineColor?: string;
   year?: number;
   wordmark?: CollectionEntry<'projects'>['data']['wordmark'];
-  /** Eagerly load the roundels — set for above-the-fold cards. */
+  /** Figure number printed in the caption, e.g. "1.3". */
+  fig: string;
+  /** Eagerly load the roundels and screenshot — set for above-the-fold cards. */
   eager?: boolean;
+  /** Lay the plate out as a full-width spread: figure left, text right. */
+  wide?: boolean;
 }
 
-const { slug, title, description, techStack, image, line = '•', lineColor = 'blue', year, wordmark, eager = false } = Astro.props;
+const { slug, title, description, techStack, image, liveUrl, line = '•', lineColor = 'blue', year, wordmark, fig, eager = false, wide = false } = Astro.props;
 const accent = resolveColor(lineColor);
 const href = `/projects/${slug}`;
 ---
 
-<article class="card" style={`--accent:${accent}`}>
-  <div class="card__media">
-    {
-      image ? (
-        <img src={image} alt="" loading="lazy" decoding="async" />
-      ) : (
-        <span class="card__placeholder">
-          <LineBadge label={line} size={56} eager={eager} />
-          <span class="label text-dim">Screenshot</span>
-        </span>
-      )
-    }
-  </div>
+<!-- A manual plate: framed screenshot with an offset line-color shadow, a
+     route stripe, then title, description, and stack. The title link stretches
+     over the whole plate. The caption names the address, since the wordmark
+     sits just below it. -->
+<article class:list={['plate', { 'plate--wide': wide }]} style={`--accent:${accent}`}>
+  <figure class="plate__fig">
+    <div class="plate__shot">
+      {
+        image ? (
+          <img src={image} alt="" width="2560" height="1600" loading={eager ? 'eager' : 'lazy'} decoding="async" />
+        ) : (
+          <span class="plate__placeholder">
+            <LineBadge label={line} size={56} eager={eager} />
+          </span>
+        )
+      }
+    </div>
+    <figcaption class="caption"><span class="mono">Fig. {fig}</span> {host(liveUrl) ?? title}</figcaption>
+  </figure>
 
-  <div class="card__body">
-    <div class="card__head">
-      <LineBadge label={line} size={32} title={`${title} line`} eager={eager} />
-      <h3 class="card__title">
-        <a class="card__link" href={href} data-umami-event="project-click" data-umami-event-project={slug}>{wordmark ? <Wordmark name={wordmark} /> : title}</a>
+  <div class="plate__body">
+    <div class="plate__bar">
+      <LineBadge label={line} size={32} eager={eager} />
+      <h3 class="plate__title">
+        <a class="plate__link" href={href} data-umami-event="project-click" data-umami-event-project={slug}>{wordmark ? <Wordmark name={wordmark} /> : title}</a>
       </h3>
-      {year && <span class="card__year mono text-dim">{year}</span>}
+      {year && <span class="plate__year mono">{year}</span>}
     </div>
 
-    <p class="card__desc text-dim">{description}</p>
-
-    <ul class="card__tags" aria-label="Tech stack">
-      {techStack.slice(0, 4).map((t) => <li class="tag">{t}</li>)}
-      {techStack.length > 4 && <li class="tag tag--more">+{techStack.length - 4}</li>}
-    </ul>
+    <p class="plate__desc">{smart(description)}</p>
+    <div class="plate__stack mono dots"><ul aria-label="Stack">{techStack.map((t) => <li>{t}</li>)}</ul></div>
   </div>
 </article>
 
 <style>
-  .card {
+  .plate {
+    container-type: inline-size;
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--color-surface);
-    border: 1px solid var(--color-rule);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition:
-      border-color 0.15s ease,
-      transform 0.15s ease;
   }
-  .card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-  }
-
-  .card__media {
-    display: block;
+  .plate__shot {
+    border: 2px solid var(--ink);
+    background: var(--paper-2);
     aspect-ratio: 16 / 10;
-    background: var(--color-surface-2);
-    border-bottom: 3px solid var(--accent);
     overflow: hidden;
+    box-shadow: var(--plate-shadow) var(--plate-shadow) 0 var(--accent);
+    transition:
+      box-shadow 0.3s var(--ease),
+      transform 0.3s var(--ease);
   }
-  .card__media img {
+  .plate__shot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top;
+    transition: transform 0.6s var(--ease);
   }
-  .card__placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
+  .plate__placeholder {
+    display: grid;
+    place-items: center;
     height: 100%;
-    background-image:
-      linear-gradient(var(--color-rule) 1px, transparent 1px),
-      linear-gradient(90deg, var(--color-rule) 1px, transparent 1px);
-    background-size: 28px 28px;
-    background-position: center;
   }
 
-  .card__body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    padding: 1.25rem;
-    flex: 1;
-  }
-  .card__head {
+  .plate__bar {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--hair);
   }
-  .card__title {
-    margin: 0;
-    font-size: 1.2rem;
+  .plate__bar::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -1px;
+    height: 5px;
+    background: var(--accent);
+    transform: scaleX(0.18);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease);
   }
-  .card__title a {
-    color: var(--color-text);
+  .plate__title {
+    min-width: 0;
+    flex: 0 1 auto;
+    /* Capped by the plate's width so a long wordmark never outgrows it. */
+    font-size: min(clamp(1.4rem, 2.4vw, 1.85rem), 9cqi);
+    line-height: 1;
+    letter-spacing: -0.01em;
   }
-  .card__title a:hover {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  /* Stretch the title link over the whole card so the entire tile is
-     clickable, while keeping a single real anchor for accessibility. */
-  .card__link::after {
+  /* Stretch the title link over the whole plate, keeping one real anchor. The
+     focus ring moves to the plate, so keyboard focus matches the hover. */
+  .plate__link::after {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 1;
   }
-  .card__year {
-    margin-left: auto;
-    font-size: 0.85rem;
+  .plate__link:focus-visible {
+    outline: none;
   }
-  .card__desc {
-    margin: 0;
-    font-size: 0.95rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .plate:has(.plate__link:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 12px;
+    border-radius: 2px;
+  }
+  .plate:has(.plate__link:focus-visible) .plate__bar::after {
+    transform: none;
+  }
+  @media (hover: hover) {
+    .plate:hover .plate__shot {
+      transform: translate(-3px, -3px);
+      box-shadow: calc(var(--plate-shadow) + 3px) calc(var(--plate-shadow) + 3px) 0 var(--accent);
+    }
+    .plate:hover .plate__shot img {
+      transform: scale(1.015);
+    }
+    .plate:hover .plate__bar::after {
+      transform: none;
+    }
+  }
+  .plate:active .plate__shot {
+    transform: none;
   }
 
-  .card__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    list-style: none;
-    margin: 0.15rem 0 0;
-    padding: 0;
-    margin-top: auto;
+  .plate__year {
+    margin-left: auto;
+    font-size: var(--t-small);
+    color: var(--dim);
   }
-  .tag {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    padding: 0.3rem 0.55rem;
-    border: 1px solid var(--color-rule);
-    border-radius: 100px;
-    color: var(--color-text-dim);
-    white-space: nowrap;
+  .plate__desc {
+    margin-top: 1rem;
+    font-size: var(--t-body);
+    line-height: 1.5;
+    color: var(--ink-2);
+    text-wrap: pretty;
   }
-  .tag--more {
-    color: var(--accent);
-    border-color: var(--accent);
+  .plate__stack {
+    margin-top: 0.75rem;
+    font-size: var(--t-micro);
+    color: var(--dim);
+  }
+  /* Flex-wrap already moves a whole name to the next line; a name only breaks
+     inside when it's wider than the line on its own (very large text). */
+  .plate__stack li {
+    white-space: normal;
+  }
+
+  /* An odd plate out spans the row: figure on the left six columns, its text
+     on the right six, on the page grid. */
+  @media (min-width: 45.01em) {
+    .plate--wide {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--col-gap);
+      align-items: start;
+    }
+    .plate--wide .plate__fig {
+      grid-column: 1 / span 6;
+    }
+    .plate--wide .plate__body {
+      grid-column: 7 / span 6;
+    }
+    .plate--wide .plate__bar {
+      margin-top: 0;
+    }
+  }
+
+  /* Phones: the (smaller) offset is mirrored as a right margin, so the
+     shadow stays inside the gutter. */
+  @media (max-width: 45em) {
+    .plate__shot {
+      margin-right: var(--plate-shadow);
+    }
   }
 </style>

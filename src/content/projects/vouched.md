@@ -33,8 +33,28 @@ spot.
   pickers are native disclosure elements, and writes go through Next.js Server Actions, so
   the core of the site works before client JavaScript loads.
 
+## Key decisions
+
+[//]: # "Hidden until you write something here: add a few short paragraphs or bullets. These [//] lines never render. Prompts:"
+[//]: # "Why names-only, no anonymous reviews: what did that rule out, and what did it cost?"
+[//]: # "Why passwordless SMS sign-in plus Turnstile, instead of email or OAuth?"
+[//]: # "Why progressive enhancement (plain GET search, native disclosures, Server Actions)?"
+[//]: # "Why the live version narrowed the prototype (profiles, feed, requests board) down to two jobs."
+
+## What was hard
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "The hardest part of the people-to-business graph, or of seeding a directory nobody has vouched in yet."
+[//]: # "Anything about SMS codes and bot screening that didn't work the first time."
+
 ## Outcome
 
 Live at vouchedsoftware.com, built with Next.js and Tailwind CSS and deployed on Vercel.
 The live version narrows an earlier prototype (profiles, a feed, a requests board) down
 to two jobs: find a business, and see who vouches for it.
+
+## What I'd change
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "What you'd build next, or do differently, now that the scope is two jobs."
+[//]: # "What you'd measure to know vouched is working."

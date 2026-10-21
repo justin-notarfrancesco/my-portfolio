@@ -1,54 +1,48 @@
 ---
-import LineBadge from './LineBadge.astro';
+import { GITHUB_URL, LINKEDIN_URL } from '../lib/profile';
 
 const year = new Date().getFullYear();
 
+// Same stops as the header. Email lives on the contact page, behind its
+// human check, so it isn't repeated as a second link to /contact.
 const nav = [
+  { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/projects', label: 'Work' },
   { href: '/contact', label: 'Contact' },
 ];
 
 const socials = [
-  { href: 'https://github.com/justin-notarfrancesco', label: 'GitHub' },
-  { href: 'https://www.linkedin.com/in/justin-notarfrancesco/', label: 'LinkedIn' },
-  // The address is gated behind a human check on the contact page.
-  { href: '/contact', label: 'Email' },
+  { href: GITHUB_URL, label: 'GitHub' },
+  { href: LINKEDIN_URL, label: 'LinkedIn' },
 ];
 ---
 
-<footer class="footer">
-  <div class="footer__inner container">
-    <div class="footer__brand">
-      <a href="/" class="footer__logo" aria-label="Justin Notarfrancesco, home" data-umami-event="footer-click" data-umami-event-destination="/">
-        <LineBadge label="J" size={48} title="Home" eager={false}/>
-        <span>
-          <strong>Justin Notarfrancesco</strong><br />
-          <span class="text-dim">Frontend Engineer</span>
-        </span>
-      </a>
-    </div>
+<footer class="foot">
+  <div class="wrap g12 foot__grid">
+    <a href="/" class="foot__brand" aria-label="Justin Notarfrancesco, home" data-umami-event="footer-click" data-umami-event-destination="/">
+      <img class="foot__bullet" src="/subway/J.svg" alt="" width="48" height="48" loading="lazy" />
+      <span>
+        <strong>Justin Notarfrancesco</strong>
+        <span class="foot__dim">Frontend Engineer</span>
+      </span>
+    </a>
 
-    <nav class="footer__nav" aria-label="Footer">
-      <span class="label text-dim">Directory</span>
+    <nav class="foot__col" aria-label="Footer">
+      <span class="foot__label mono">Directory</span>
       <ul>
         {nav.map((l) => <li><a href={l.href} data-umami-event="footer-click" data-umami-event-destination={l.href}>{l.label}</a></li>)}
       </ul>
     </nav>
 
-    <nav class="footer__nav" aria-label="Social">
-      <span class="label text-dim">Connect</span>
+    <nav class="foot__col" aria-label="Social">
+      <span class="foot__label mono">Connect</span>
       <ul>
         {
           socials.map((s) => (
             <li>
-              <a
-                href={s.href}
-                data-umami-event="footer-click"
-                data-umami-event-destination={s.label.toLowerCase()}
-                {...s.href.startsWith('http') ? { target: '_blank', rel: 'me noopener noreferrer' } : {}}
-              >
-                {s.label}
+              <a href={s.href} target="_blank" rel="me noopener noreferrer" data-umami-event="footer-click" data-umami-event-destination={s.label.toLowerCase()}>
+                {s.label} <span aria-hidden="true">&nearr;</span><span class="sr-only"> (opens in new tab)</span>
               </a>
             </li>
           ))
@@ -57,65 +51,142 @@ const socials = [
     </nav>
   </div>
 
-  <div class="footer__base container">
-    <span class="mono text-dim">&copy; {year} Justin Notarfrancesco</span>
-    <span class="mono text-dim">Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer" data-umami-event="footer-click" data-umami-event-destination="astro.build"><i>Astro</i></a> &middot; Designed after the 1970 NYCTA Standards Manual</span>
+  <div class="wrap foot__base mono">
+    <span>&copy; {year} Justin Notarfrancesco</span>
+    <span class="foot__credit">Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer" data-umami-event="footer-click" data-umami-event-destination="astro.build">Astro<span class="sr-only"> (opens in new tab)</span></a> &middot; Designed after the 1970 NYCTA Standards Manual</span>
+    <a class="foot__top" href="#top" data-umami-event="footer-click" data-umami-event-destination="#top">Back to top <span aria-hidden="true">&uarr;</span></a>
   </div>
 </footer>
 
 <style>
-  .footer {
-    border-top: 1px solid var(--color-rule);
-    margin-top: 4rem;
+  .foot {
+    margin-top: clamp(3rem, 7vw, 5rem);
+    background: var(--ink);
+    color: var(--on-ink);
+    border-top: 6px solid var(--ink);
   }
-
-  .footer__inner {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
-    gap: 2rem;
-    padding-block: 3rem 2rem;
+  .foot::before {
+    content: '';
+    position: absolute;
+    inset: 4px 0 auto;
+    height: 2px;
+    background: var(--on-ink);
   }
-  .footer__logo {
+  .foot__grid {
+    padding-block: 3rem 2.25rem;
+    row-gap: 2rem;
+  }
+  .foot__brand {
+    grid-column: 1 / span 6;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    color: var(--color-text);
-    text-decoration: none;
-    line-height: 1.4;
+    gap: 0.85rem;
+    align-self: start;
+    justify-self: start;
+    max-width: 100%;
+    line-height: 1.35;
   }
-  .footer__logo:hover {
-    text-decoration: none;
+  .foot__bullet {
+    flex: none;
   }
-
-  .footer__nav ul {
+  .foot__brand > span {
+    display: grid;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .foot__dim {
+    color: var(--band-dim);
+  }
+  .foot__col {
+    grid-column: span 3;
+    min-width: 0;
+  }
+  .foot__label {
+    font-size: var(--t-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--track-mono);
+    color: var(--band-dim);
+  }
+  .foot__col ul {
     list-style: none;
-    margin: 0.75rem 0 0;
+    margin: 0.35rem 0 0;
     padding: 0;
     display: grid;
-    gap: 0.5rem;
   }
-  .footer__nav a {
-    color: var(--color-text);
-    font-weight: 500;
+  /* 44px tap targets at every width. */
+  .foot__col a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    font-weight: 700;
   }
-  .footer__nav a:hover {
-    color: var(--color-link);
+  .foot a:hover,
+  .foot a:active {
+    text-decoration: underline;
+    text-decoration-color: var(--mta-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
   }
-
-  .footer__base {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding-block: 1.25rem;
-    border-top: 1px solid var(--color-rule);
-    font-size: 0.8rem;
+  .foot :focus-visible {
+    outline-color: var(--mta-yellow);
   }
-
-  @media (max-width: 720px) {
-    .footer__inner {
+  /* Three equal-weight slots, so the credit centers on the page rather than
+     floating between unequal neighbours. */
+  .foot__base {
+    display: grid;
+    grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
+    align-items: center;
+    gap: 0.6rem 1.5rem;
+    padding-block: 1.1rem 1.4rem;
+    /* Hairline inset to the gutters, like the rule above a sign's base line. */
+    background: linear-gradient(var(--band-rule), var(--band-rule)) var(--gutter) 0 / calc(100% - 2 * var(--gutter)) 1px no-repeat;
+    font-size: var(--t-micro);
+    letter-spacing: var(--track-mono);
+    color: var(--band-dim);
+  }
+  .foot__credit {
+    text-align: center;
+  }
+  /* 44px tap targets that don't push the base line's rhythm apart. */
+  .foot__base a {
+    display: inline-block;
+    padding-block: 0.8rem;
+    margin-block: -0.8rem;
+    color: var(--on-ink);
+  }
+  .foot__top {
+    justify-self: end;
+    white-space: nowrap;
+  }
+  /* Below 940px the three base-line items stack on purpose rather than
+     wrapping one at a time. */
+  @media (max-width: 58.75em) {
+    .foot__base {
       grid-template-columns: 1fr;
-      gap: 1.75rem;
+      justify-items: start;
+      gap: 0.9rem;
+    }
+    .foot__credit {
+      text-align: left;
+    }
+    .foot__top {
+      justify-self: start;
+    }
+  }
+
+  @media (max-width: 62.5em) {
+    .foot__brand {
+      grid-column: 1 / span 12;
+    }
+    .foot__col {
+      grid-column: span 6;
+    }
+  }
+  /* Only reached with enlarged text: one column each, nothing clipped. */
+  @media (max-width: 20em) {
+    .foot__col {
+      grid-column: 1 / -1;
     }
   }
 </style>

@@ -31,7 +31,26 @@ train made 28 stops") and a five-line emoji result made for iMessage.
 - Streaks tracked on a MetroCard that earns a punch per day, plus instant
   swipe-up-to-re-board restarts. No menus, ever.
 
+## Key decisions
+
+[//]: # "Hidden until you write something here: add a few short paragraphs or bullets. These [//] lines never render. Prompts:"
+[//]: # "Why one date-seeded mulberry32 PRNG drives the whole daily map."
+[//]: # "Why integer-scaled pixel art on a low-res offscreen canvas."
+[//]: # "Why vanilla TypeScript and canvas, with no framework and no runtime dependencies."
+[//]: # "How you tuned the Local to Express difficulty curve."
+
+## What was hard
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "Making swipe controls feel right on phones."
+[//]: # "Keeping the daily puzzle fair when everyone shares the same seed."
+
 ## Outcome
 
 Vanilla TypeScript and a `<canvas>`, with no framework and no runtime dependencies. The whole
 game ships as a static bundle and the tutorial is one sentence: swipe anywhere.
+
+## What I'd change
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "What you'd add or change after watching people play it in the group chat."

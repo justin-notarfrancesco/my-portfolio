@@ -52,8 +52,11 @@ const paths: Record<IconName, string> = {
   <span class="social-link__text">
     <span class="social-link__label">{label}</span>
     {value && <span class="social-link__value mono" data-email-text={protectedEmail ? '' : undefined}>{value}</span>}
+    {isExternal && <span class="sr-only"> (opens in new tab)</span>}
   </span>
-  <span class="social-link__arrow mono" aria-hidden="true">&rsaquo;</span>
+  <!-- ↗ leaves the site; → stays on it (the email card's first click
+       reveals the address in place, its second opens your mail app). -->
+  <span class="social-link__arrow" aria-hidden="true">{isExternal ? '\u2197' : '\u2192'}</span>
 </a>
 
 <style>
@@ -61,22 +64,29 @@ const paths: Record<IconName, string> = {
     display: flex;
     align-items: center;
     gap: 1rem;
+    min-width: 0;
     padding: 0.9rem 1.1rem;
-    border: 1px solid var(--color-rule);
+    border: 2px solid var(--ink);
     border-radius: var(--radius);
-    background: var(--color-surface);
-    color: var(--color-text);
+    background: var(--field);
+    color: var(--ink);
     text-decoration: none;
     transition:
-      border-color 0.15s ease,
-      background 0.15s ease,
-      transform 0.12s ease;
+      box-shadow 0.15s ease,
+      transform 0.15s var(--ease);
   }
-  .social-link:hover {
-    text-decoration: none;
-    border-color: var(--sl-color);
-    background: var(--color-surface-2);
-    transform: translateX(4px);
+  @media (hover: hover) {
+    .social-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--sl-color);
+    }
+    .social-link:hover .social-link__arrow {
+      color: var(--ink);
+    }
+  }
+  .social-link:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
   }
   .social-link__icon {
     display: grid;
@@ -85,7 +95,7 @@ const paths: Record<IconName, string> = {
     block-size: 40px;
     border-radius: 50%;
     background: var(--sl-color);
-    color: #0a0a0a;
+    color: var(--on-ink);
     flex: none;
   }
   .social-link__icon svg {
@@ -102,23 +112,22 @@ const paths: Record<IconName, string> = {
     font-weight: 700;
     letter-spacing: 0.02em;
   }
+  /* One line, always: a long handle truncates rather than making this card
+     taller than its neighbours. */
   .social-link__value {
-    font-size: 0.85rem;
-    color: var(--color-text-dim);
+    font-size: var(--t-small);
+    color: var(--dim);
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .social-link__arrow {
+    flex: none;
     margin-left: auto;
-    font-size: 1.5rem;
-    color: var(--color-text-dim);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--dim);
     transition: color 0.15s ease;
-  }
-  /* Until the address is revealed, a click verifies rather than navigates. */
-  .social-link[data-email-reveal]:not([data-email-revealed]) .social-link__arrow {
-    visibility: hidden;
-  }
-  .social-link:hover .social-link__arrow {
-    color: var(--sl-color);
   }
 </style>

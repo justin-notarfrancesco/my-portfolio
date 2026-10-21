@@ -6,52 +6,67 @@ import { TURNSTILE_SITE_KEY } from '../lib/turnstile';
 
 const socials = [
   { icon: 'email', label: 'Email', value: 'Click to reveal', href: '/contact', color: 'var(--mta-red)', protectedEmail: true },
-  { icon: 'github', label: 'GitHub', value: 'github.com/justin-notarfrancesco', href: 'https://github.com/justin-notarfrancesco', color: 'var(--mta-grey)' },
+  { icon: 'github', label: 'GitHub', value: 'github.com/justin-notarfrancesco', href: 'https://github.com/justin-notarfrancesco', color: 'var(--ink)' },
   { icon: 'linkedin', label: 'LinkedIn', value: 'in/justin-notarfrancesco', href: 'https://www.linkedin.com/in/justin-notarfrancesco/', color: 'var(--mta-blue)' },
 ] as const;
 ---
 
 <Layout title="Contact" description="Get in touch with Justin Notarfrancesco via email, GitHub, or LinkedIn.">
-  <section class="section">
-    <div class="container">
-      <header class="page-head">
-        <p class="eyebrow"><LineBadge label="L" size={32} eager /> <span class="eyebrow__eta mono">Service Information</span></p>
-        <h1>Contact</h1>
+  <section class="page">
+    <div class="wrap">
+      <div class="chapter">
+        <span class="chapter__num">1.0</span>
+        <span>Contact</span>
+      </div>
+
+      <header class="contact__head">
+        <p class="eyebrow"><LineBadge label="C" size={28} title="C for Contact" eager /> <span class="mono">SERVICE INFORMATION</span></p>
+        <h1 class="page__title">Contact</h1>
       </header>
 
-      <div class="contact">
+      <div class="g12 contact">
         <div class="contact__channels">
-          <h2 class="section-title label">Direct Lines</h2>
+          <h2 class="kicker"><span class="mono">1.1</span> Direct Lines</h2>
           <div class="channels">
             {socials.map((s) => <SocialLink icon={s.icon} label={s.label} value={s.value} href={s.href} color={s.color} protectedEmail={'protectedEmail' in s} />)}
           </div>
+          <noscript>
+            <p class="email-status text-dim mono">The email address and the form need JavaScript. Without it, reach me on <a href="https://www.linkedin.com/in/justin-notarfrancesco/" rel="me">LinkedIn</a>.</p>
+          </noscript>
           <div id="email-challenge" class="email-challenge" data-sitekey={TURNSTILE_SITE_KEY}></div>
           <p id="email-status" class="email-status text-dim mono" aria-live="polite"></p>
         </div>
 
         <div class="contact__form-wrap">
-          <h2 class="section-title label">Send a Message</h2>
-          <form class="form" id="contact-form">
+          <h2 class="kicker"><span class="mono">1.2</span> Send a Message</h2>
+          <!-- POST, and the button stays disabled until the script runs, so the
+               fields can never end up in a URL. The script opens a mail draft. -->
+          <form class="form" id="contact-form" method="post" novalidate>
+            <p class="form__req text-dim mono">All fields required.</p>
             <div class="field">
               <label for="name" class="label">Name</label>
               <input id="name" name="name" type="text" autocomplete="name" required />
+              <p class="field__err" id="name-err">Enter your name.</p>
             </div>
             <div class="field">
               <label for="email" class="label">Email</label>
               <input id="email" name="email" type="email" autocomplete="email" required />
+              <p class="field__err" id="email-err">Enter an email address like name@example.com.</p>
             </div>
             <div class="field">
               <label for="message" class="label">Message</label>
               <textarea id="message" name="message" rows="5" required></textarea>
+              <p class="field__err" id="message-err">Write a message.</p>
             </div>
-            <button type="submit" class="btn btn--primary" data-umami-event="contact-click" data-umami-event-target="form">Send &rarr;</button>
+            <button type="submit" class="btn btn--ink" disabled data-umami-event="contact-click" data-umami-event-target="form">Send <span aria-hidden="true">&rarr;</span></button>
             <p class="form__note text-dim mono">
-              Opens your mail client; no data leaves your device. Prefer to write directly?&nbsp;
-              <a href="/contact" data-email-reveal data-umami-event="contact-click" data-umami-event-target="reveal" data-umami-after={JSON.stringify({ event: 'contact-click', target: 'mailto' })}><span data-email-text>Reveal email address</span></a>
+              Opens a draft in your mail app; nothing you type here is sent to this site. Prefer to write directly?&nbsp;<a href="/contact" data-email-reveal data-umami-event="contact-click" data-umami-event-target="reveal" data-umami-after={JSON.stringify({ event: 'contact-click', target: 'mailto' })}><span data-email-text>Reveal email address</span></a>
             </p>
           </form>
         </div>
       </div>
+
+      <p class="folio" aria-hidden="true"><span>1.0 &mdash; Contact</span><span>01</span></p>
     </div>
   </section>
 </Layout>
@@ -61,14 +76,38 @@ const socials = [
   import { getEmail } from '../scripts/email-gate';
 
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  form?.querySelector<HTMLButtonElement>('button[type="submit"]')?.removeAttribute('disabled');
+
+  // Each field shows its error once you've left it (or tried to send), and
+  // only then is the message tied to it for screen readers.
+  const fields = form ? [...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')] : [];
+  const check = (el: HTMLInputElement | HTMLTextAreaElement) => {
+    const bad = !el.validity.valid;
+    if (bad) {
+      el.setAttribute('aria-invalid', 'true');
+      el.setAttribute('aria-describedby', `${el.id}-err`);
+    } else {
+      el.removeAttribute('aria-invalid');
+      el.removeAttribute('aria-describedby');
+    }
+    return !bad;
+  };
+  fields.forEach((el) => {
+    el.addEventListener('blur', () => el.value !== '' && check(el));
+    el.addEventListener('input', () => el.hasAttribute('aria-invalid') && check(el));
+  });
 
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     // Script-dispatched submits never trigger the human check.
     if (!event.isTrusted) return;
 
-    // Native validation still applies (required fields, email format).
-    if (!form.reportValidity()) return;
+    // Required fields and email format; focus the first problem.
+    const invalid = fields.filter((el) => !check(el));
+    if (invalid.length) {
+      invalid[0].focus();
+      return;
+    }
 
     const data = new FormData(form);
     let to: string;
@@ -88,24 +127,31 @@ const socials = [
 </script>
 
 <style>
-  .page-head__lede {
-    font-size: 1.15rem;
+  .contact__head {
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+    border-bottom: 2px solid var(--ink);
+  }
+  .contact__head .page__title {
+    margin-top: 1.1rem;
   }
 
   .contact {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 5vw, 3.5rem);
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    row-gap: 3rem;
     align-items: start;
   }
-  .section-title {
-    color: var(--color-text-dim);
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--color-rule);
-    margin-bottom: 1.5rem;
+  .contact__channels {
+    grid-column: 1 / span 5;
+    min-width: 0;
+  }
+  .contact__form-wrap {
+    grid-column: 7 / span 6;
+    min-width: 0;
   }
   .channels {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.75rem;
   }
 
@@ -114,50 +160,120 @@ const socials = [
   }
   .email-status:not(:empty) {
     margin-top: 0.75rem;
-    font-size: 0.78rem;
+    font-size: var(--t-micro);
+    text-wrap: pretty;
+  }
+  .email-status a {
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .form {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
+  }
+  .form__req {
+    font-size: var(--t-micro);
+    margin-bottom: -0.25rem;
   }
   .field {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.5rem;
-  }
-  .field .label {
-    color: var(--color-text-dim);
   }
   input,
   textarea {
     font-family: inherit;
-    font-size: 1rem;
-    color: var(--color-text);
-    background: var(--color-surface);
-    border: 1px solid var(--color-rule);
+    font-size: var(--t-body);
+    line-height: 1.4;
+    color: var(--ink);
+    background: var(--field);
+    border: 2px solid var(--ink);
     border-radius: var(--radius);
     padding: 0.75rem 0.9rem;
     width: 100%;
     resize: vertical;
-    transition: border-color 0.15s ease;
+    transition: box-shadow 0.15s ease;
+  }
+  /* Single-line fields share the button's height. */
+  input {
+    min-height: var(--ctl-h);
+    padding-block: 0;
   }
   input:focus,
   textarea:focus {
-    border-color: var(--color-link);
+    outline: none;
+    box-shadow: 4px 4px 0 var(--mta-yellow);
+  }
+  input:focus-visible,
+  textarea:focus-visible {
     outline: 3px solid var(--focus);
-    outline-offset: 1px;
+    outline-offset: 2px;
+  }
+  /* Errors: a red field with a red offset, and a line saying what to fix. */
+  input[aria-invalid],
+  textarea[aria-invalid] {
+    border-color: var(--mta-red);
+    box-shadow: 4px 4px 0 var(--mta-red);
+  }
+  /* Ink, not red: --mta-red is under 4.5:1 on paper at this size. The red
+     square carries the colour cue. */
+  .field__err {
+    display: none;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--t-small);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .field__err::before {
+    content: '';
+    flex: none;
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    background: var(--mta-red);
+  }
+  [aria-invalid] + .field__err {
+    display: flex;
   }
   .form button {
     justify-self: start;
   }
+  .form button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
   .form__note {
-    font-size: 0.78rem;
+    font-size: var(--t-micro);
     line-height: 1.5;
+    text-wrap: pretty;
+  }
+  .form__note a {
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+    /* A comfortable tap target without loosening the note's leading. */
+    display: inline-block;
+    padding-block: 0.7rem;
+    margin-block: -0.7rem;
+    max-width: 100%;
+  }
+  /* Only with very large text does the phrase need to break. */
+  @media (max-width: 22.5em) {
+    .form__note a {
+      white-space: normal;
+    }
   }
 
-  @media (max-width: 780px) {
-    .contact {
-      grid-template-columns: 1fr;
+  @media (max-width: 53.75em) {
+    .contact__channels,
+    .contact__form-wrap {
+      grid-column: 1 / span 12;
     }
   }
 </style>

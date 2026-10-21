@@ -28,7 +28,25 @@ collection, so adding one is a single file with typed frontmatter.
 - Privacy-friendly analytics with Umami's data-attribute API: a small, consistent
   event vocabulary instead of tracking everything.
 
+## Key decisions
+
+[//]: # "Hidden until you write something here: add a few short paragraphs or bullets. These [//] lines never render. Prompts:"
+[//]: # "Why Astro with near-zero client JavaScript."
+[//]: # "Why the 1970 NYCTA Standards Manual as the design system, and how strictly you follow it."
+[//]: # "Why a small, fixed Umami event vocabulary instead of tracking everything."
+
+## What was hard
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "Making the subway train ride the portrait frame (offset-path: border-box) and articulate around corners."
+[//]: # "Keeping the layout steady at every width, in print, and at large text sizes."
+
 ## Outcome
 
 Static HTML on Vercel with near-zero client JavaScript, which is most of the
 performance story. The rest is restraint.
+
+## What I'd change
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "What you'd change about the site next."

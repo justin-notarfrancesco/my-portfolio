@@ -1,0 +1,242 @@
+---
+/**
+ * Slim contact bar that slides in once the element with id `sentinel` has
+ * scrolled entirely above the viewport, so LinkedIn / Contact / GitHub stay
+ * one click away on long pages. Renders hidden and stays hidden without JS.
+ *
+ * Rendered on every page by Layout. The sentinel should be a tall element
+ * that starts on screen (the nav band by default, the hero on the homepage):
+ * the observer only fires on crossings, and a zero-height marker can be
+ * jumped clean over by an anchor link, a restored scroll, or a fast fling.
+ *
+ * The name links back to the top of the page, where the full nav lives.
+ */
+import { GITHUB_URL, LINKEDIN_URL } from '../lib/profile';
+
+interface Props {
+  /** id of the element the dock appears below, once it is fully scrolled past. Defaults to the nav band. */
+  sentinel?: string;
+}
+
+const { sentinel = 'top' } = Astro.props;
+// On the contact page itself the Contact link would point at the page you're on.
+const onContact = Astro.url.pathname.replace(/\/+$/, '') === '/contact';
+const ext = { target: '_blank', rel: 'me noopener noreferrer' };
+
+// Same stroke icons as SocialLink; shown in place of the labels on narrow phones.
+const icons = {
+  linkedin: '<rect x="2.5" y="2.5" width="19" height="19" rx="2"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4M11 17v-7"/>',
+  email: '<rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 7 9-7"/>',
+  github:
+    '<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.6 5.4 2.9 5.4 2.9a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.3c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/>',
+};
+const links = [
+  { label: 'LinkedIn', icon: icons.linkedin, href: LINKEDIN_URL, external: true, attrs: { ...ext, 'data-umami-event': 'social-click', 'data-umami-event-platform': 'linkedin' } },
+  ...(onContact
+    ? []
+    : [{ label: 'Contact', icon: icons.email, href: '/contact', primary: true, attrs: { 'data-umami-event': 'cta-click', 'data-umami-event-destination': '/contact' } }]),
+  { label: 'GitHub', icon: icons.github, href: GITHUB_URL, external: true, attrs: { ...ext, 'data-umami-event': 'social-click', 'data-umami-event-platform': 'github' } },
+];
+---
+
+<div class="dock" data-sentinel={sentinel} aria-label="Quick contact" role="region" hidden>
+  <div class="wrap dock__inner">
+    <a class="dock__who" href="#top" aria-label="Justin Notarfrancesco, back to top" data-umami-event="nav-click" data-umami-event-destination="#top">
+      <img class="dock__bullet" src="/subway/J.svg" alt="" width="32" height="32" />
+      <strong class="dock__name"><span class="dock__first">Justin </span><span>Notarfrancesco</span></strong>
+    </a>
+    <ul class="dock__links">
+      {
+        links.map((l) => (
+          <li>
+            <a class:list={[{ 'is-primary': l.primary }, `dock__link--${l.label.toLowerCase()}`]} href={l.href} {...l.attrs}>
+              <svg class="dock__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={l.icon} />
+              <span class="dock__label">{l.label}</span>
+              {'external' in l && <span class="sr-only"> (opens in new tab)</span>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<script>
+  const dock = document.querySelector<HTMLElement>('.dock[data-sentinel]');
+  const sentinel = dock && document.getElementById(dock.dataset.sentinel ?? '');
+  if (dock && sentinel && 'IntersectionObserver' in window) {
+    dock.hidden = false;
+    const set = (on: boolean) => {
+      dock.classList.toggle('is-on', on);
+      dock.inert = !on;
+    };
+    set(false);
+    new IntersectionObserver(([e]) => set(!e.isIntersecting && e.boundingClientRect.bottom <= 0)).observe(sentinel);
+  }
+</script>
+
+<style>
+  .dock {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    background: var(--ink);
+    color: var(--on-ink);
+    transform: translateY(-110%);
+    /* Hidden once it has slid away, so overscrolling past the top of the
+       page can't reveal it parked above the edge. */
+    visibility: hidden;
+    transition:
+      transform 0.35s var(--ease),
+      visibility 0s linear 0.35s;
+    border-bottom: 2px solid var(--mta-yellow);
+  }
+  .dock.is-on {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.35s var(--ease);
+  }
+  .dock__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 56px;
+  }
+  .dock__who {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: var(--t-small);
+    min-width: 0;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  /* Same bullet as the nav band at a size that holds up in the bar, and it
+     never drops out: on the smallest phones the J bullet stands in for the
+     first name. */
+  .dock__name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dock__bullet {
+    flex: none;
+    inline-size: 32px;
+    block-size: 32px;
+  }
+  @media (hover: hover) {
+    .dock__who:hover .dock__name {
+      text-decoration: underline;
+      text-decoration-color: var(--mta-yellow);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+  }
+  .dock__links {
+    display: flex;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  /* Square signage buttons, like every other button on the site. */
+  .dock__links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 0.85rem;
+    font-size: var(--t-small);
+    font-weight: 700;
+    border: 2px solid var(--band-rule);
+    border-radius: var(--radius);
+    transition:
+      background 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .dock__links a.is-primary {
+    background: var(--mta-yellow);
+    border-color: var(--mta-yellow);
+    color: var(--ink);
+  }
+  @media (hover: hover) {
+    .dock__links a:hover {
+      border-color: var(--on-ink);
+    }
+    .dock__links a.is-primary:hover {
+      background: var(--on-ink);
+      border-color: var(--on-ink);
+    }
+  }
+  .dock__links a:active {
+    transform: translate(1px, 1px);
+  }
+  .dock :focus-visible {
+    outline-color: var(--mta-yellow);
+  }
+
+  .dock__icon {
+    display: none;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Narrow phones: the links shrink to labelled icons, one at a time, so the
+     name never has to go. The label stays for screen readers. */
+  @media (max-width: 32.5em) {
+    .dock__links .dock__link--linkedin,
+    .dock__links .dock__link--github {
+      padding: 0;
+      inline-size: 44px;
+    }
+    .dock__links .dock__link--linkedin .dock__icon,
+    .dock__links .dock__link--github .dock__icon {
+      display: block;
+    }
+    .dock__links .dock__link--linkedin .dock__label,
+    .dock__links .dock__link--github .dock__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+  @media (max-width: 27.5em) {
+    .dock__links .dock__link--contact {
+      padding: 0;
+      inline-size: 44px;
+    }
+    .dock__links .dock__link--contact .dock__icon {
+      display: block;
+    }
+    .dock__links .dock__link--contact .dock__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+  /* Smallest phones: the bullet reads as the initial, so the surname stays
+     whole on one line beside it. */
+  @media (max-width: 24em) {
+    .dock__inner {
+      gap: 0.5rem;
+    }
+    .dock__links {
+      gap: 0.25rem;
+    }
+    .dock__first {
+      display: none;
+    }
+    .dock__name {
+      font-size: var(--t-micro);
+    }
+  }
+</style>

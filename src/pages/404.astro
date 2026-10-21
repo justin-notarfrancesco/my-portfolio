@@ -1,24 +1,59 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LineBadge from '../components/LineBadge.astro';
+
+// Bullets match each page's own eyebrow badge (A for About, C for Contact).
+const stops = [
+  { href: '/', label: 'Home', line: 'J' },
+  { href: '/about', label: 'About', line: 'A' },
+  { href: '/projects', label: 'Work', line: 'W' },
+  { href: '/contact', label: 'Contact', line: 'C' },
+];
 ---
 
 <Layout title="404: Off the Map" description="This stop doesn't exist on the line.">
-  <section class="section notfound">
-    <div class="container">
-      <div class="notfound__badges" aria-hidden="true">
-        <LineBadge label="4" size={64} />
-        <LineBadge label="0" size={64} class="notfound__zero" />
-        <LineBadge label="4" size={64} />
+  <section class="page">
+    <div class="wrap">
+      <div class="chapter">
+        <span class="chapter__num">404</span>
+        <span>Service Change</span>
       </div>
-      <h1>Off the Map</h1>
-      <p class="text-dim">
-        This stop isn&rsquo;t on the line. The page may have moved, or the link ran express past it.
-      </p>
-      <div class="notfound__cta">
-        <a class="btn btn--primary" href="/" data-umami-event="cta-click" data-umami-event-destination="/">Back to Home &rarr;</a>
-        <a class="btn btn--ghost" href="/projects" data-umami-event="cta-click" data-umami-event-destination="/projects">View Work</a>
+
+      <div class="g12 notfound">
+        <div class="notfound__main">
+          <div class="notfound__badges" aria-hidden="true">
+            <LineBadge label="4" size={64} />
+            <LineBadge label="0" size={64} class="notfound__zero" />
+            <LineBadge label="4" size={64} />
+          </div>
+          <h1 class="page__title">Off the Map</h1>
+          <p class="page__lede">
+            This stop isn&rsquo;t on the line. The page may have moved, or the link ran express past it.
+          </p>
+          <div class="notfound__cta">
+            <a class="btn btn--ink" href="/" data-umami-event="cta-click" data-umami-event-destination="/">Back to Home <span aria-hidden="true">&rarr;</span></a>
+            <a class="btn btn--line" href="/projects" data-umami-event="cta-click" data-umami-event-destination="/projects">View Work</a>
+          </div>
+        </div>
+
+        <!-- Like the transfer panel on a platform sign: every stop you can still reach. -->
+        <nav class="notfound__aside" aria-labelledby="transfers-title">
+          <h2 class="kicker" id="transfers-title"><span class="mono">0.1</span> Transfers</h2>
+          <ul class="transfers">
+            {stops.map((s) => (
+              <li>
+                <a href={s.href} data-umami-event="cta-click" data-umami-event-destination={s.href}>
+                  <LineBadge label={s.line} size={28} />
+                  <span>{s.label}</span>
+                  <span class="transfers__arrow" aria-hidden="true">&rarr;</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
+
+      <p class="folio" aria-hidden="true"><span>404 &mdash; Service Change</span><span>00</span></p>
     </div>
   </section>
 </Layout>
@@ -32,29 +67,77 @@ import LineBadge from '../components/LineBadge.astro';
 
 <style>
   .notfound {
-    text-align: center;
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+    row-gap: 3rem;
+    align-items: end;
+  }
+  .notfound__main {
+    grid-column: 1 / span 8;
+  }
+  .notfound__aside {
+    grid-column: 9 / span 4;
   }
   .notfound__badges {
     display: flex;
-    justify-content: center;
     gap: 0.75rem;
-    margin-bottom: 2rem;
   }
   /* The "0" isn't a real route, so it renders LineBadge's circle fallback. */
-  .notfound__zero {
+  /* :global — LineBadge doesn't receive this page's scope attribute. */
+  .notfound :global(.notfound__zero) {
     --badge-bg: var(--mta-yellow);
-    --badge-ink: #000;
-  }
-  .notfound p {
-    max-width: 44ch;
-    margin-inline: auto;
-    font-size: 1.15rem;
+    --badge-ink: var(--ink);
   }
   .notfound__cta {
     display: flex;
-    gap: 0.75rem;
-    justify-content: center;
+    gap: 0.6rem;
     flex-wrap: wrap;
     margin-top: 2rem;
+  }
+
+  .transfers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .transfers a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3rem;
+    border-bottom: 1px solid var(--hair);
+    font-weight: 700;
+  }
+  .transfers__arrow {
+    margin-left: auto;
+    transition: transform 0.2s var(--ease);
+  }
+  @media (hover: hover) {
+    .transfers a:hover span:not(.transfers__arrow) {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    .transfers a:hover .transfers__arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  @media (max-width: 53.75em) {
+    .notfound__main,
+    .notfound__aside {
+      grid-column: 1 / span 12;
+    }
+  }
+  /* Narrow phones: the primary action takes the full width and the other
+     sits under it, rather than one button wrapping alone. */
+  @media (max-width: 27.5em) {
+    .notfound__cta {
+      display: grid;
+    }
+    .notfound__cta .btn {
+      width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
   }
 </style>

@@ -1,0 +1,97 @@
+---
+/**
+ * A chapter head, as in the printed manual: an oversized chapter number set
+ * beside the section title, over a full-width rule. Every numbered section
+ * on the homepage and About page uses it, so the big numerals read as the
+ * system rather than one loud exception.
+ *
+ * Optional `eyebrow` slot sits above the title; optional `link` sits on the
+ * right (it drops below the title on narrow screens).
+ */
+interface Props {
+  /** Chapter number, e.g. "3.0". */
+  num: string;
+  title: string;
+  /** id for the h2, for the section's aria-labelledby. */
+  id: string;
+  link?: { href: string; label: string; attrs?: Record<string, string> };
+}
+
+const { num, title, id, link } = Astro.props;
+---
+
+<header class:list={['chead', 'reveal', { 'chead--link': link }]}>
+  <span class="chead__num" aria-hidden="true">{num}</span>
+  <div class="chead__text">
+    <slot name="eyebrow" />
+    <h2 class="chead__title" id={id}><span class="sr-only">{num} </span>{title}</h2>
+  </div>
+  {link && <a class="link chead__link" href={link.href} {...link.attrs}>{link.label} <span aria-hidden="true">&rarr;</span></a>}
+</header>
+
+<style>
+  /* Laid on the page's 12 columns: the numeral holds columns 1–2 and the
+     title starts on column 3, so every chapter title shares one left edge
+     however wide its numeral is. */
+  .chead {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: 1rem;
+    align-items: end;
+    padding-bottom: 1.25rem;
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+    border-bottom: 2px solid var(--ink);
+  }
+  .chead__num {
+    grid-column: 1 / span 2;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+  .chead__text {
+    grid-column: 3 / -1;
+    display: grid;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+  .chead--link .chead__text {
+    grid-column: 3 / span 8;
+  }
+  .chead__title {
+    font-size: clamp(2rem, 4.5vw, 3.4rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+  .chead__link {
+    grid-column: 11 / span 2;
+    justify-self: end;
+    padding-block: 0.75rem;
+    margin-block: -0.75rem;
+  }
+
+  /* Phones: the numeral takes one of the four guide columns (three of twelve),
+     and the link drops under the title on the title's edge. */
+  @media (max-width: 45em) {
+    .chead__num {
+      grid-column: 1 / span 3;
+    }
+    .chead__text,
+    .chead--link .chead__text {
+      grid-column: 4 / -1;
+    }
+    .chead__link {
+      grid-column: 4 / -1;
+      justify-self: start;
+    }
+  }
+  @media (max-width: 30em) {
+    .chead__title {
+      font-size: clamp(1.5rem, 7.5vw, 2rem);
+    }
+  }
+</style>

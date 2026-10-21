@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ChapterHead from "../components/ChapterHead.astro";
 import LineBadge from "../components/LineBadge.astro";
+import SkillsIndex from "../components/SkillsIndex.astro";
+import Stats from "../components/Stats.astro";
 import { PERSON, SITE_URL } from "../lib/schema";
 
 const schema = {
@@ -11,43 +14,6 @@ const schema = {
   name: "About Justin Notarfrancesco",
   mainEntity: PERSON,
 };
-
-// Skills grouped like a service guide, each mapped to a line color.
-const skillGroups = [
-  {
-    line: "A",
-    title: "Core",
-    skills: ["TypeScript", "JavaScript", "HTML", "CSS"],
-  },
-  {
-    line: "F",
-    title: "Frameworks",
-    skills: ["React", "Next.js", "Astro", "Tailwind CSS"],
-  },
-  {
-    line: "N",
-    title: "Focus",
-    skills: ["Search and discovery UX", "Frontend architecture", "Web performance", "Design systems"],
-  },
-  {
-    line: "6",
-    title: "Quality",
-    skills: ["Jest", "Playwright", "Storybook", "Accessibility"],
-  },
-  {
-    line: "L",
-    title: "Platform",
-    skills: ["REST APIs", "Vite", "Vercel", "Claude Code"],
-  },
-];
-
-// Recruiter quick-scan: experience, stack, focus, and working hours.
-const stats = [
-  { value: "5+", label: "Years Experience", line: "3" },
-  { value: "React + TS", label: "Core Stack", line: "F" },
-  { value: "Discovery", label: "Favorite Problem", line: "4" },
-  { value: "US Eastern", label: "Time Zone", line: "7", express: true },
-];
 ---
 
 <Layout
@@ -61,18 +27,23 @@ const stats = [
     is:inline
     set:html={JSON.stringify(schema)}
   />
-  <section class="section">
-    <div class="container">
-      <header class="page-head">
-        <p class="eyebrow">
-          <LineBadge label="E" size={32} eager />
-          <span class="eyebrow__eta mono">Station Guide</span>
-        </p>
-        <h1>About</h1>
-      </header>
+  <section class="page">
+    <div class="wrap">
+      <div class="chapter">
+        <span class="chapter__num">1.0</span>
+        <span>Profile</span>
+      </div>
 
-      <div class="about">
-        <div class="about__bio stack">
+      <div class="g12">
+        <header class="about__head">
+          <p class="eyebrow">
+            <LineBadge label="A" size={28} title="A for About" eager />
+            <span class="mono">STATION GUIDE</span>
+          </p>
+          <h1 class="page__title">About</h1>
+        </header>
+
+        <div class="about__bio">
           <p class="lede">
             I&rsquo;m Justin, a frontend engineer at JPMorgan Chase. I build the
             pages people use to find something and decide on it: browsing,
@@ -80,7 +51,7 @@ const stats = [
             years in, I&rsquo;ve learned that the edge cases <em>are</em> the
             job.
           </p>
-          <p class="text-dim">
+          <p class="about__more">
             <b>That way of working borrows from Massimo Vignelli&rsquo;s 1970 subway
             signage.</b> The best systems disappear into usefulness: good wayfinding,
             honest typography, a strict grid, and color that means something. I care
@@ -90,195 +61,62 @@ const stats = [
             design craft, translating between the two so a team can move fast
             without breaking the experience.
           </p>
-
-          <h2 class="stats__title label text-dim" id="glance-title">At a Glance</h2>
-          <ul class="stats" aria-labelledby="glance-title">
-            {
-              stats.map((s) => (
-                <li class="stat">
-                  <LineBadge
-                    label={s.line}
-                    size={32}
-                    title={s.label}
-                    express={s.express}
-                  />
-                  <span class="stat__value">{s.value}</span>
-                  <span class="stat__label label text-dim">{s.label}</span>
-                </li>
-              ))
-            }
-          </ul>
         </div>
       </div>
 
-      <hr class="about__divider" />
-
-      <section class="skills" aria-labelledby="skills-title">
-        <div class="section-head">
-          <p class="eyebrow">
-            <LineBadge label="N" size={32} />
-            <span class="eyebrow__eta mono">Service Guide</span>
-          </p>
-          <h2 id="skills-title">Skills &amp; Tech Stack</h2>
-        </div>
-
-        <div class="grid skills__grid">
-          {
-            skillGroups.map((g) => (
-              <div class="skill-group">
-                <div class="skill-group__head">
-                  <LineBadge label={g.line} size={32} title={g.title} />
-                  <h3>{g.title}</h3>
-                </div>
-                <ul>
-                  {g.skills.map((s) => (
-                    <li>{s}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
-        </div>
+      <section class="page__section" aria-labelledby="glance-title">
+        <ChapterHead num="2.0" title="At a Glance" id="glance-title" />
+        <Stats chapter="2" />
       </section>
+
+      <section class="page__section" aria-labelledby="skills-title">
+        <ChapterHead num="3.0" title="Skills & Tech Stack" id="skills-title">
+          <p class="eyebrow" slot="eyebrow">
+            <LineBadge label="G" size={28} title="G for Guide" />
+            <span class="mono">SERVICE GUIDE</span>
+          </p>
+        </ChapterHead>
+        <SkillsIndex chapter="3" />
+      </section>
+
+      <p class="folio" aria-hidden="true"><span>3.0 &mdash; Skills &amp; Tech Stack</span><span>03</span></p>
     </div>
   </section>
 </Layout>
 
 <style>
-  .about {
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: start;
+  /* The title holds columns 1–4 and the bio starts beside it on col 5, so
+     the two share a row instead of leaving the left columns empty under the
+     title. The bio's hairline lines up with the title's cap height. */
+  .about__head {
+    grid-column: 1 / span 4;
+    margin-top: clamp(2rem, 5vw, 3.5rem);
   }
-  .lede {
-    font-size: 1.3rem;
-    line-height: 1.5;
+  .about__head .page__title {
+    margin-top: 1.1rem;
   }
-
-  .stats__title {
-    margin: 2rem 0 0;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--color-rule);
-    font-size: 0.75rem;
+  .about__bio {
+    grid-column: 5 / span 8;
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--hair);
   }
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-    gap: 1.5rem 2rem;
-    list-style: none;
-    margin: 1rem 0 0;
-    padding: 0;
+  /* Directly under a chapter head, whose rule already closes the top. */
+  .page__section :global(.stats) {
+    margin-top: 0;
+    border-top: 0;
   }
-  .stat {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 0.6rem;
-    align-items: center;
-  }
-  .stat :global(.line-badge) {
-    grid-row: span 2;
-  }
-  .stat__value {
-    font-size: 1.6rem;
-    font-weight: 700;
-    line-height: 1;
-  }
-  .stat__label {
-    grid-column: 2;
+  .about__more {
+    margin-top: 1.25rem;
+    max-width: 62ch;
+    color: var(--ink-2);
+    text-wrap: pretty;
   }
 
-  .about__media {
-    position: relative;
-    border: 1px solid var(--color-rule);
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--color-surface);
-    position: sticky;
-    top: calc(var(--nav-h) + 1.5rem);
-  }
-  .about__media img {
-    width: 100%;
-    height: auto;
-  }
-  .about__plate {
-    position: absolute;
-    inset: auto 0 0 0;
-    padding: 0.6rem 0.9rem;
-    background: color-mix(in srgb, var(--color-bg) 82%, transparent);
-    color: var(--mta-yellow);
-    letter-spacing: 0.12em;
-    border-top: 2px solid var(--mta-yellow);
-  }
-
-  .about__divider {
-    border: 0;
-    margin-block: clamp(2.5rem, 6vw, 4rem);
-  }
-
-  .section-head {
-    margin-bottom: 2rem;
-  }
-  .skills__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .skill-group {
-    padding: 1.25rem;
-    border: 1px solid var(--color-rule);
-    border-radius: var(--radius);
-    background: var(--color-surface);
-  }
-  .skill-group__head {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 0.9rem;
-  }
-  .skill-group__head h3 {
-    margin: 0;
-    font-size: 1.05rem;
-  }
-  .skill-group ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.4rem;
-  }
-  .skill-group li {
-    font-size: 0.9rem;
-    color: var(--color-text-dim);
-    padding-left: 0.9rem;
-    position: relative;
-  }
-  .skill-group li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.55em;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--color-text-dim);
-  }
-
-  @media (max-width: 900px) {
-    .skills__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (max-width: 780px) {
-    .about {
-      grid-template-columns: 1fr;
-    }
-    .about__media {
-      order: -1;
-      max-width: 320px;
-      position: static;
-    }
-  }
-  @media (max-width: 520px) {
-    .skills__grid {
-      grid-template-columns: 1fr;
+  @media (max-width: 62.5em) {
+    .about__head,
+    .about__bio {
+      grid-column: 1 / span 12;
     }
   }
 </style>

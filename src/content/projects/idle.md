@@ -34,8 +34,27 @@ FiscalData, while the ledger and bank connection are simulated in the browser.
 - A transfer state machine with a 2 PM ET cutoff, banking-day awareness, and
   maker-checker dual approval, plus a demo clock to fast-forward settlement.
 
+## Key decisions
+
+[//]: # "Hidden until you write something here: add a few short paragraphs or bullets. These [//] lines never render. Prompts:"
+[//]: # "Why integer cents in a bigint instead of a decimal library."
+[//]: # "Why the largest-remainder method for allocate."
+[//]: # "Why compute bond-equivalent yield exactly per 31 CFR 356 rather than approximating."
+[//]: # "How you modeled the transfer state machine (cutoff, banking days, maker-checker)."
+
+## What was hard
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "A money bug the property-based tests caught that example tests wouldn't have."
+[//]: # "Working with live FRED and Treasury FiscalData feeds: gaps, delays, failures (and what ?chaos=1 taught you)."
+
 ## Outcome
 
 Property-based tests (fast-check) hold the money invariants, and CI enforces 100%
 branch coverage on the money and analysis libraries. Add `?chaos=1` for a 20%
 simulated-network failure rate.
+
+## What I'd change
+
+[//]: # "Hidden until you write something here. Prompts:"
+[//]: # "What you'd add for a real treasury product: auth, audit trails, a real bank connection."

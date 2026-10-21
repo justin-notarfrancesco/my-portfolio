@@ -5,6 +5,9 @@
  */
 
 export const SITE_URL = 'https://notar.nyc';
+/** The default share card. Bump ?v= whenever og.png changes: LinkedIn, X and
+ * Slack cache previews by image URL, so a new URL is what makes them refetch. */
+export const OG_IMAGE = '/og.png?v=2';
 export const PERSON_ID = `${SITE_URL}/#justin`;
 
 export const PERSON = {
@@ -12,7 +15,7 @@ export const PERSON = {
   '@id': PERSON_ID,
   name: 'Justin Notarfrancesco',
   url: SITE_URL,
-  image: `${SITE_URL}/og.png`,
+  image: `${SITE_URL}${OG_IMAGE}`,
   jobTitle: 'Frontend Engineer',
   worksFor: {
     '@type': 'Organization',

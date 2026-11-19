@@ -49,11 +49,6 @@ const socials = [
               <p class="field__err" id="name-err">Enter your name.</p>
             </div>
             <div class="field">
-              <label for="email" class="label">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" required />
-              <p class="field__err" id="email-err">Enter an email address like name@example.com.</p>
-            </div>
-            <div class="field">
               <label for="message" class="label">Message</label>
               <textarea id="message" name="message" rows="5" required></textarea>
               <p class="field__err" id="message-err">Write a message.</p>
@@ -102,7 +97,7 @@ const socials = [
     // Script-dispatched submits never trigger the human check.
     if (!event.isTrusted) return;
 
-    // Required fields and email format; focus the first problem.
+    // Required fields; focus the first problem.
     const invalid = fields.filter((el) => !check(el));
     if (invalid.length) {
       invalid[0].focus();
@@ -118,7 +113,6 @@ const socials = [
     }
     const href = buildMailtoHref(to, {
       name: String(data.get('name') ?? ''),
-      email: String(data.get('email') ?? ''),
       message: String(data.get('message') ?? ''),
     });
 

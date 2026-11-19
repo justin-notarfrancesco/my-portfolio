@@ -7,6 +7,8 @@
  * first click only reveals; the link becomes a real `mailto:` for the next one.
  */
 
+import { buildMailtoHref } from '../lib/contact';
+
 declare global {
   interface Window {
     turnstile?: {
@@ -88,7 +90,7 @@ export function getEmail(): Promise<string> {
 
 function reveal(email: string) {
   document.querySelectorAll<HTMLAnchorElement>('a[data-email-reveal]').forEach((link) => {
-    link.href = `mailto:${email}`;
+    link.href = buildMailtoHref(email);
     link.dataset.emailRevealed = 'true';
     link.querySelectorAll('[data-email-text]').forEach((el) => (el.textContent = email));
 

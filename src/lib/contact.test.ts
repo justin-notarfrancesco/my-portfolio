@@ -4,10 +4,20 @@ import { buildMailtoHref } from './contact';
 const TO = 'justinnotar@gmail.com';
 
 describe('buildMailtoHref', () => {
+  it('gives direct email links a default subject and leaves the body blank', () => {
+    const href = buildMailtoHref(TO);
+    const url = new URL(href);
+
+    expect(url.protocol).toBe('mailto:');
+    expect(url.pathname).toBe(TO);
+    expect(url.searchParams.get('subject')).toBe('New message via portfolio site');
+    expect(url.searchParams.has('body')).toBe(false);
+    expect(href).toContain('subject=New%20message%20via%20portfolio%20site');
+  });
+
   it('produces a valid mailto: URL with subject and body query params', () => {
     const href = buildMailtoHref(TO, {
       name: 'Ada Lovelace',
-      email: 'ada@example.com',
       message: 'Hello there',
     });
 
@@ -18,15 +28,12 @@ describe('buildMailtoHref', () => {
 
     const params = url.searchParams;
     expect(params.get('subject')).toBe('New message from Ada Lovelace via portfolio site');
-    expect(params.get('body')).toBe(
-      'Name: Ada Lovelace\nEmail: ada@example.com\n\nHello there',
-    );
+    expect(params.get('body')).toBe('Hello there');
   });
 
   it('percent-encodes spaces as %20, not "+"', () => {
     const href = buildMailtoHref(TO, {
       name: 'Grace Hopper',
-      email: 'grace@example.com',
       message: 'two words',
     });
 
@@ -38,7 +45,6 @@ describe('buildMailtoHref', () => {
   it('percent-encodes newlines in the message as %0A', () => {
     const href = buildMailtoHref(TO, {
       name: 'Alan',
-      email: 'alan@example.com',
       message: 'line one\nline two',
     });
 
@@ -48,7 +54,6 @@ describe('buildMailtoHref', () => {
   it('encodes characters that would otherwise break the URL', () => {
     const href = buildMailtoHref(TO, {
       name: 'A & B',
-      email: 'ab@example.com',
       message: 'Rate is 50% off? Yes! #deal =win',
     });
 
@@ -57,23 +62,18 @@ describe('buildMailtoHref', () => {
 
     const url = new URL(href);
     expect(url.searchParams.get('subject')).toBe('New message from A & B via portfolio site');
-    expect(url.searchParams.get('body')).toBe(
-      'Name: A & B\nEmail: ab@example.com\n\nRate is 50% off? Yes! #deal =win',
-    );
+    expect(url.searchParams.get('body')).toBe('Rate is 50% off? Yes! #deal =win');
   });
 
   it('trims surrounding whitespace from all fields', () => {
     const href = buildMailtoHref(TO, {
       name: '  Ada  ',
-      email: '  ada@example.com  ',
       message: '  hi  ',
     });
 
     const url = new URL(href);
     expect(url.searchParams.get('subject')).toBe('New message from Ada via portfolio site');
-    expect(url.searchParams.get('body')).toBe(
-      'Name: Ada\nEmail: ada@example.com\n\nhi',
-    );
+    expect(url.searchParams.get('body')).toBe('hi');
   });
 
   it('never emits the "post"/enctype form pattern that Safari rejects', () => {
@@ -81,7 +81,6 @@ describe('buildMailtoHref', () => {
     // mailto, not a bare "mailto:address" relying on form POST semantics.
     const href = buildMailtoHref(TO, {
       name: 'x',
-      email: 'x@example.com',
       message: 'y',
     });
     expect(href.startsWith(`mailto:${TO}?`)).toBe(true);

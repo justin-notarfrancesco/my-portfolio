@@ -1,11 +1,11 @@
 export interface ContactFormValues {
   name: string;
-  email: string;
   message: string;
 }
 
 /**
- * Build a `mailto:` href from contact form values.
+ * Build a `mailto:` href with a default subject for direct email links,
+ * or a personalized subject and the visitor's message for contact form drafts.
  *
  * Browsers do not reliably support POSTing form data to a `mailto:` action
  * (Safari rejects it as an "invalid address"). Instead we construct a standard
@@ -15,14 +15,11 @@ export interface ContactFormValues {
  * Values are encoded with `encodeURIComponent`, so spaces become `%20` and
  * newlines become `%0A` — not `+`, which some mail clients render literally.
  */
-export function buildMailtoHref(to: string, values: ContactFormValues): string {
-  const name = values.name.trim();
-  const email = values.email.trim();
-  const message = values.message.trim();
+export function buildMailtoHref(to: string, values?: ContactFormValues): string {
+  const name = values?.name.trim();
+  const subject = name ? `New message from ${name} via portfolio site` : 'New message via portfolio site';
 
-  const subject = `New message from ${name} via portfolio site`;
-  const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
-
-  const query = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  let query = `subject=${encodeURIComponent(subject)}`;
+  if (values) query += `&body=${encodeURIComponent(values.message.trim())}`;
   return `mailto:${to}?${query}`;
 }
